@@ -31,8 +31,9 @@
     }
   },
   "lint-staged": {
-    "*.{js,ts,tsx}": [
-      "npm run lint && npm run format"
+    "src/**/*.{js,jsx,ts,tsx}": [
+      "npm run lint",
+      "npm run format"
     ]
   },
   "browserslist": {
