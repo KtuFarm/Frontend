@@ -12,9 +12,19 @@ module.exports = {
     react: {
       version: 'detect',
     },
+    'import/parsers': {
+      '@typescript-eslint/parser': ['.ts', '.tsx'],
+    },
+    'import/resolver': {
+      typescript: {},
+    },
   },
-  plugins: ['simple-import-sort'],
+  plugins: ['simple-import-sort', 'import'],
   extends: [
+    'eslint:recommended',
+    'plugin:import/errors',
+    'plugin:import/warnings',
+    'plugin:import/typescript',
     'plugin:react/recommended',
     'plugin:react-hooks/recommended',
     'plugin:@typescript-eslint/recommended',
@@ -30,6 +40,11 @@ module.exports = {
     ],
     'react/jsx-uses-react': 'off',
     'react/react-in-jsx-scope': 'off',
+    'react-hooks/rules-of-hooks': 'error',
+    'react-hooks/exhaustive-deps': 'warn',
+    'react/prop-types': 'off',
+    'import/no-unresolved': 'error',
+    'import/no-unused-modules': 'warn',
     'prettier/prettier': ['error', {}, { usePrettierrc: true }],
     'simple-import-sort/imports': [
       'error',
