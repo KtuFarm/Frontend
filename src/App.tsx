@@ -1,26 +1,15 @@
-import logo from './logo.svg';
+import { Route, Routes } from 'react-router-dom';
+import { Home } from 'features/home';
+import { Login } from 'features/login';
+import { PharmacyForm, PharmacyList } from 'features/pharmacy';
 
-import './App.css';
-
-function App(): JSX.Element {
+export const App = (): JSX.Element => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Routes>
+      <Route path="/" element={<Login />} />
+      <Route path="/home" element={<Home />} />
+      <Route path="/pharmacy" element={<PharmacyList />} />
+      <Route path="/pharmacy/new" element={<PharmacyForm />} />
+    </Routes>
   );
-}
-
-export default App;
+};
