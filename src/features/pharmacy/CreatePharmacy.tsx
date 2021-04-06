@@ -1,10 +1,12 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { PharmacyForm } from './components/PharmacyForm';
 import { PharmacyDTO } from './dtos/PharmacyDTO';
 import { createPharmacy } from './services/PharmacyService';
 
 export const CreatePharmacy = (): JSX.Element => {
+  const navigate = useNavigate();
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
 
@@ -16,6 +18,7 @@ export const CreatePharmacy = (): JSX.Element => {
     setSubmitting(true);
     try {
       await createPharmacy(pharmacy);
+      navigate('/pharmacy');
     } catch (error) {
       setError('Failed to create pharmacy');
     } finally {
