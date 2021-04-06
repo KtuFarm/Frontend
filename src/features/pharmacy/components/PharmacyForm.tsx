@@ -79,14 +79,14 @@ export const PharmacyForm = ({
   };
 
   const handleChangeDay = (index: number, weekday: Weekday): void => {
+    if (workingHours[index].days.includes(weekday)) return;
+
     const newWorkingHours = workingHours.map((hour) => ({
       ...hour,
       days: hour.days.filter((day) => day !== weekday),
     }));
 
     const selectedHour = newWorkingHours[index];
-
-    if (selectedHour.days.includes(weekday)) return;
 
     newWorkingHours[index] = {
       ...selectedHour,
