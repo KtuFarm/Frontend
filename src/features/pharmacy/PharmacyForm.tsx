@@ -13,14 +13,12 @@ import { WorkingHoursDTO } from './WorkingHoursDTO';
 import { WorkingHours } from './WorkingHoursModel';
 
 const initialWorkingHours: WorkingHours = {
-  id: 0,
   openTime: '',
   closeTime: '',
   days: [],
 };
 
 export const PharmacyForm = (): JSX.Element => {
-  const [id, setId] = useState(1);
   const [address, setAddress] = useState('');
   const [city, setCity] = useState('');
   const [workingHours, setWorkingHours] = useState<WorkingHours[]>([
@@ -28,86 +26,51 @@ export const PharmacyForm = (): JSX.Element => {
   ]);
 
   const addNewWorkingHours = (): void => {
-    setWorkingHours([...workingHours, { ...initialWorkingHours, id }]);
-    setId(id + 1);
+    setWorkingHours([...workingHours, initialWorkingHours]);
   };
 
-  const removeWorkingHours = (id: number): void => {
-    setWorkingHours((prevTimes) => prevTimes.filter((time) => time.id !== id));
+  const removeWorkingHours = (index: number): void => {
+    setWorkingHours(workingHours.filter((_hours, i) => i === index));
   };
 
   const handleOpenTimeChange = (
     event: React.ChangeEvent<HTMLInputElement>,
-    id: number
+    index: number
   ): void => {
     const newOpenTime = event.target.value;
+    const newWorkingHours = [...workingHours];
+    newWorkingHours[index].openTime = newOpenTime;
 
-    setWorkingHours((previousHours) => {
-      const workingHourIndex = previousHours.findIndex(
-        (time) => time.id === id
-      );
-
-      if (workingHourIndex === -1) return previousHours;
-
-      const newHours = [...previousHours];
-
-      newHours[workingHourIndex] = {
-        ...newHours[workingHourIndex],
-        openTime: newOpenTime,
-      };
-
-      return newHours;
-    });
+    setWorkingHours(newWorkingHours);
   };
 
   const handleCloseTimeChange = (
     event: React.ChangeEvent<HTMLInputElement>,
-    id: number
+    index: number
   ): void => {
-    const newClosingHours = event.target.value;
+    const newCloseTime = event.target.value;
+    const newWorkingHours = [...workingHours];
+    newWorkingHours[index].closeTime = newCloseTime;
 
-    setWorkingHours((previousHours) => {
-      const workingHourIndex = previousHours.findIndex(
-        (time) => time.id === id
-      );
-
-      if (workingHourIndex === -1) return previousHours;
-
-      const newHours = [...previousHours];
-
-      newHours[workingHourIndex] = {
-        ...newHours[workingHourIndex],
-        closeTime: newClosingHours,
-      };
-
-      return newHours;
-    });
+    setWorkingHours(newWorkingHours);
   };
 
-  const handleChangeDay = (id: number, weekday: Weekday): void => {
-    setWorkingHours((previousHours) => {
-      const workingHourIndex = previousHours.findIndex(
-        (time) => time.id === id
-      );
+  const handleChangeDay = (index: number, weekday: Weekday): void => {
+    const newWorkingHours = workingHours.map((hour) => ({
+      ...hour,
+      days: hour.days.filter((day) => day !== weekday),
+    }));
 
-      if (workingHourIndex === -1) return previousHours;
+    const selectedHour = newWorkingHours[index];
 
-      const newHours = [...previousHours].map((hour) => ({
-        ...hour,
-        days: hour.days.filter((day) => day !== weekday),
-      }));
+    if (selectedHour.days.includes(weekday)) return;
 
-      const selectedHour = newHours[workingHourIndex];
+    newWorkingHours[index] = {
+      ...selectedHour,
+      days: [...selectedHour.days, weekday],
+    };
 
-      if (selectedHour.days.includes(weekday)) return previousHours;
-
-      newHours[workingHourIndex] = {
-        ...selectedHour,
-        days: [...selectedHour.days, weekday],
-      };
-
-      return newHours;
-    });
+    setWorkingHours(newWorkingHours);
   };
 
   const handleSubmit = async (
@@ -204,8 +167,8 @@ export const PharmacyForm = (): JSX.Element => {
                 </Button.Secondary>
               </div>
 
-              {workingHours.map((workTime) => (
-                <div key={workTime.id} className="w-full px-2 mb-4">
+              {workingHours.map((workTime, index) => (
+                <div key={index} className="w-full px-2 mb-4">
                   <div className="flex">
                     <div className="relative">
                       <Label htmlFor="openingHours">Atidarymo laikas</Label>
@@ -214,9 +177,7 @@ export const PharmacyForm = (): JSX.Element => {
                         id="openingHours"
                         name="openingHours"
                         value={workTime.openTime}
-                        onChange={(event) =>
-                          handleOpenTimeChange(event, workTime.id)
-                        }
+                        onChange={(event) => handleOpenTimeChange(event, index)}
                       />
                     </div>
                     <div className="relative sm:ml-4 sm:mr-2">
@@ -227,7 +188,7 @@ export const PharmacyForm = (): JSX.Element => {
                         name="closingHours"
                         value={workTime.closeTime}
                         onChange={(event) =>
-                          handleCloseTimeChange(event, workTime.id)
+                          handleCloseTimeChange(event, index)
                         }
                       />
                     </div>
@@ -244,17 +205,13 @@ export const PharmacyForm = (): JSX.Element => {
                             id={weekday}
                             name={weekday}
                             className="mt-4"
-                            onChange={() =>
-                              handleChangeDay(workTime.id, weekday)
-                            }
+                            onChange={() => handleChangeDay(index, weekday)}
                           />
                         </div>
                       );
                     })}
                     <div className="flex flex-col justify-end sm:ml-4">
-                      <Button.Danger
-                        onClick={() => removeWorkingHours(workTime.id)}
-                      >
+                      <Button.Danger onClick={() => removeWorkingHours(index)}>
                         Pašalinti laiką
                       </Button.Danger>
                     </div>
