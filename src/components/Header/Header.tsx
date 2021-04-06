@@ -5,7 +5,7 @@ export const Header = (): JSX.Element => {
     <header className="text-gray-600 bg-white shadow body-font">
       <div className="container flex flex-col flex-wrap items-center p-5 mx-auto md:flex-row">
         <Link
-          to="/"
+          to="/home"
           className="flex items-center mb-4 font-medium text-gray-900 title-font md:mb-0"
         >
           <span className="ml-3 text-xl">Vaistukai</span>
