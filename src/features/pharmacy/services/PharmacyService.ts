@@ -10,3 +10,9 @@ export const createPharmacy = async (
     body: JSON.stringify(pharmacy),
   });
 };
+
+export const getPharmacies = async (): Promise<Response> => {
+  return fetch(`${API_HOST}/api/v1/Pharmacies`, {
+    headers: DEFAULT_HEADERS,
+  });
+};

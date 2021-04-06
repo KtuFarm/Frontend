@@ -45,7 +45,13 @@ module.exports = {
     'react/prop-types': 'off',
     'import/no-unresolved': 'error',
     'import/no-unused-modules': 'warn',
-    'prettier/prettier': ['error', {}, { usePrettierrc: true }],
+    'prettier/prettier': [
+      'error',
+      {
+        endOfLine: 'auto',
+      },
+      { usePrettierrc: true },
+    ],
     'simple-import-sort/imports': [
       'error',
       {
