@@ -45,7 +45,8 @@ export const PharmacyForm = ({
 
   useEffect(() => {
     onClearError();
-  }, [address, city, onClearError, workingHours]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [address, city, workingHours]);
 
   const handleAddNewWorkingHours = (): void => {
     setWorkingHours([...workingHours, { ...initialWorkingHours }]);
@@ -241,8 +242,9 @@ export const PharmacyForm = ({
                 </div>
               ))}
 
+              {console.log(error, error !== '')}
               {error !== '' ? (
-                <p className="mx-2 mt-3 text-red-700">{error}</p>
+                <p className="mx-2 text-red-700">{error}</p>
               ) : null}
 
               <div className="w-full p-2">

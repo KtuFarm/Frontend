@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { PharmacyForm } from './components/PharmacyForm';
@@ -10,17 +10,21 @@ export const CreatePharmacy = (): JSX.Element => {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
 
-  const handleClearError = (): void => {
+  const handleClearError = useCallback((): void => {
     setError('');
-  };
+  }, []);
 
   const handleSubmit = async (pharmacy: PharmacyDTO): Promise<void> => {
     setSubmitting(true);
     try {
-      await createPharmacy(pharmacy);
+      const response = await createPharmacy(pharmacy);
+
+      if (response.status !== 201)
+        throw new Error('Nepavyko sukurti vaistinės');
+
       navigate('/pharmacy');
     } catch (error) {
-      setError('Failed to create pharmacy');
+      setError(error?.message ?? '');
     } finally {
       setSubmitting(false);
     }
