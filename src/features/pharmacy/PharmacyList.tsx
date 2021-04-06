@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 import { Button } from 'components/Button';
 import { Container } from 'components/Container';
 import { Content } from 'components/Content';
@@ -13,7 +15,9 @@ export const PharmacyList = (): JSX.Element => {
             Vaistinės
           </h1>
 
-          <Button.Primary className="sm:ml-2">Pridėti vaistinę</Button.Primary>
+          <Link to="new" className="sm:ml-2">
+            <Button.Primary>Pridėti vaistinę</Button.Primary>
+          </Link>
         </div>
         <table className="w-full text-left whitespace-no-wrap table-auto table-stripped">
           <thead>
