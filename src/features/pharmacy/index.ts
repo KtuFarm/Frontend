@@ -1,2 +1,2 @@
 export * from './CreatePharmacy';
-export * from './PharmacyList';
+export * from './Pharmacies';
