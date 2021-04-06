@@ -242,7 +242,6 @@ export const PharmacyForm = ({
                 </div>
               ))}
 
-              {console.log(error, error !== '')}
               {error !== '' ? (
                 <p className="mx-2 text-red-700">{error}</p>
               ) : null}
