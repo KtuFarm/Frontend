@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { Button } from 'components/Button';
 import { Header } from 'components/Header';
@@ -6,11 +6,15 @@ import { Input } from 'components/Input';
 import { Label } from 'components/Label';
 import { Radio } from 'components/Radio';
 
-import { PharmacyDTO } from './PharmacyDTO';
-import { createPharmacy } from './PharmacyService';
-import { dayAbbreviations, dayToInt, Weekday, Weekdays } from './WeekdayModel';
-import { WorkingHoursDTO } from './WorkingHoursDTO';
-import { WorkingHours } from './WorkingHoursModel';
+import { PharmacyDTO } from '../dtos/PharmacyDTO';
+import { WorkingHoursDTO } from '../dtos/WorkingHoursDTO';
+import {
+  dayAbbreviations,
+  dayToInt,
+  Weekday,
+  Weekdays,
+} from '../models/WeekdayModel';
+import { WorkingHours } from '../models/WorkingHoursModel';
 
 const initialWorkingHours: WorkingHours = {
   openTime: '',
@@ -18,19 +22,37 @@ const initialWorkingHours: WorkingHours = {
   days: [],
 };
 
-export const PharmacyForm = (): JSX.Element => {
+interface PharmacyFormProps {
+  pharmacy?: PharmacyDTO;
+  loading?: boolean;
+  submitting: boolean;
+  error?: string;
+  onSubmit: (pharmacy: PharmacyDTO) => unknown;
+  onClearError: () => unknown;
+}
+
+export const PharmacyForm = ({
+  onSubmit,
+  submitting,
+  onClearError,
+  error,
+}: PharmacyFormProps): JSX.Element => {
   const [address, setAddress] = useState('');
   const [city, setCity] = useState('');
   const [workingHours, setWorkingHours] = useState<WorkingHours[]>([
-    initialWorkingHours,
+    { ...initialWorkingHours },
   ]);
 
-  const addNewWorkingHours = (): void => {
-    setWorkingHours([...workingHours, initialWorkingHours]);
+  useEffect(() => {
+    onClearError();
+  }, [address, city, onClearError, workingHours]);
+
+  const handleAddNewWorkingHours = (): void => {
+    setWorkingHours([...workingHours, { ...initialWorkingHours }]);
   };
 
-  const removeWorkingHours = (index: number): void => {
-    setWorkingHours(workingHours.filter((_hours, i) => i === index));
+  const handleRemoveWorkingHours = (index: number): void => {
+    setWorkingHours(workingHours.filter((_hours, i) => i !== index));
   };
 
   const handleOpenTimeChange = (
@@ -73,9 +95,7 @@ export const PharmacyForm = (): JSX.Element => {
     setWorkingHours(newWorkingHours);
   };
 
-  const handleSubmit = async (
-    event: React.FormEvent<HTMLFormElement>
-  ): Promise<void> => {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
 
     const workingHoursDto = workingHours.reduce<WorkingHoursDTO[]>(
@@ -99,7 +119,7 @@ export const PharmacyForm = (): JSX.Element => {
       workingHours: workingHoursDto,
     };
 
-    await createPharmacy(pharmacyDto);
+    onSubmit(pharmacyDto);
   };
 
   const handleCityChange = (
@@ -162,7 +182,7 @@ export const PharmacyForm = (): JSX.Element => {
               </div>
 
               <div className="w-full px-2 mb-4">
-                <Button.Secondary onClick={addNewWorkingHours}>
+                <Button.Secondary onClick={handleAddNewWorkingHours}>
                   Pridėti darbo laiką
                 </Button.Secondary>
               </div>
@@ -211,7 +231,9 @@ export const PharmacyForm = (): JSX.Element => {
                       );
                     })}
                     <div className="flex flex-col justify-end sm:ml-4">
-                      <Button.Danger onClick={() => removeWorkingHours(index)}>
+                      <Button.Danger
+                        onClick={() => handleRemoveWorkingHours(index)}
+                      >
                         Pašalinti laiką
                       </Button.Danger>
                     </div>
@@ -219,8 +241,14 @@ export const PharmacyForm = (): JSX.Element => {
                 </div>
               ))}
 
+              {error !== '' ? (
+                <p className="mx-2 mt-3 text-red-700">{error}</p>
+              ) : null}
+
               <div className="w-full p-2">
-                <Button.Primary type="submit">Pridėti vaistinę</Button.Primary>
+                <Button.Primary type="submit" disabled={submitting}>
+                  Pridėti vaistinę
+                </Button.Primary>
               </div>
             </div>
           </form>
