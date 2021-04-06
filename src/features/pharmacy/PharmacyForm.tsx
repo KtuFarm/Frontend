@@ -6,42 +6,11 @@ import { Input } from 'components/Input';
 import { Label } from 'components/Label';
 import { Radio } from 'components/Radio';
 
-enum Weekday {
-  Monday = 'monday',
-  Tuesday = 'tuesday',
-  Wednesday = 'wednesday',
-  Thursday = 'thursday',
-  Friday = 'friday',
-  Saturday = 'saturday',
-  Sunday = 'sunday',
-}
-
-const Weekdays = [
-  Weekday.Monday,
-  Weekday.Tuesday,
-  Weekday.Wednesday,
-  Weekday.Thursday,
-  Weekday.Friday,
-  Weekday.Saturday,
-  Weekday.Sunday,
-];
-
-const dayAbbreviations = {
-  [Weekday.Monday]: 'P',
-  [Weekday.Tuesday]: 'A',
-  [Weekday.Wednesday]: 'T',
-  [Weekday.Thursday]: 'K',
-  [Weekday.Friday]: 'Pn',
-  [Weekday.Saturday]: 'Š',
-  [Weekday.Sunday]: 'S',
-};
-
-interface WorkingHours {
-  id: number;
-  openTime: string;
-  closeTime: string;
-  days: Weekday[];
-}
+import { PharmacyDTO } from './PharmacyDTO';
+import { createPharmacy } from './PharmacyService';
+import { dayAbbreviations, dayToInt, Weekday, Weekdays } from './WeekdayModel';
+import { WorkingHoursDTO } from './WorkingHoursDTO';
+import { WorkingHours } from './WorkingHoursModel';
 
 const initialWorkingHours: WorkingHours = {
   id: 0,
@@ -52,6 +21,8 @@ const initialWorkingHours: WorkingHours = {
 
 export const PharmacyForm = (): JSX.Element => {
   const [id, setId] = useState(1);
+  const [address, setAddress] = useState('');
+  const [city, setCity] = useState('');
   const [workingHours, setWorkingHours] = useState<WorkingHours[]>([
     initialWorkingHours,
   ]);
@@ -139,6 +110,47 @@ export const PharmacyForm = (): JSX.Element => {
     });
   };
 
+  const handleSubmit = async (
+    event: React.FormEvent<HTMLFormElement>
+  ): Promise<void> => {
+    event.preventDefault();
+
+    const workingHoursDto = workingHours.reduce<WorkingHoursDTO[]>(
+      (allHours, currentHours) => {
+        const { openTime, closeTime } = currentHours;
+
+        const newHours = currentHours.days.map<WorkingHoursDTO>((day) => ({
+          openTime,
+          closeTime,
+          dayOfWeek: dayToInt[day],
+        }));
+
+        return [...allHours, ...newHours];
+      },
+      []
+    );
+
+    const pharmacyDto: PharmacyDTO = {
+      address,
+      city,
+      workingHours: workingHoursDto,
+    };
+
+    await createPharmacy(pharmacyDto);
+  };
+
+  const handleCityChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ): void => {
+    setCity(event.target.value);
+  };
+
+  const handleAddressChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ): void => {
+    setAddress(event.target.value);
+  };
+
   return (
     <div className="h-screen bg-gray-100">
       <Header />
@@ -149,19 +161,31 @@ export const PharmacyForm = (): JSX.Element => {
               Pridėti vaistinę
             </h1>
           </div>
-          <div className="md:w-2/3">
+          <form className="md:w-2/3" onSubmit={handleSubmit}>
             <div className="flex flex-wrap -m-2">
               <div className="w-1/2 p-2">
                 <div className="relative">
                   <Label htmlFor="address">Adresas</Label>
-                  <Input type="text" id="address" name="address" />
+                  <Input
+                    type="text"
+                    id="address"
+                    name="address"
+                    value={address}
+                    onChange={handleAddressChange}
+                  />
                 </div>
               </div>
 
               <div className="w-1/2 p-2">
                 <div className="relative">
                   <Label htmlFor="city">Miestas</Label>
-                  <Input type="text" id="city" name="city" />
+                  <Input
+                    type="text"
+                    id="city"
+                    name="city"
+                    value={city}
+                    onChange={handleCityChange}
+                  />
                 </div>
               </div>
 
@@ -239,10 +263,10 @@ export const PharmacyForm = (): JSX.Element => {
               ))}
 
               <div className="w-full p-2">
-                <Button.Primary>Pridėti vaistinę</Button.Primary>
+                <Button.Primary type="submit">Pridėti vaistinę</Button.Primary>
               </div>
             </div>
-          </div>
+          </form>
         </div>
       </section>
     </div>
