@@ -1,3 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.table-stripped tbody tr:nth-child(odd) {
+  @apply bg-gray-100;
+}
