@@ -1,7 +1,7 @@
 import { Route, Routes } from 'react-router-dom';
 import { Home } from 'features/home';
 import { Login } from 'features/login';
-import { PharmacyForm, PharmacyList } from 'features/pharmacy';
+import { CreatePharmacy, PharmacyList } from 'features/pharmacy';
 
 export const App = (): JSX.Element => {
   return (
@@ -9,7 +9,7 @@ export const App = (): JSX.Element => {
       <Route path="/" element={<Login />} />
       <Route path="/home" element={<Home />} />
       <Route path="/pharmacy" element={<PharmacyList />} />
-      <Route path="/pharmacy/new" element={<PharmacyForm />} />
+      <Route path="/pharmacy/new" element={<CreatePharmacy />} />
     </Routes>
   );
 };
