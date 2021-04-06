@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { PharmacyDTO } from 'swagger/models';
 
 interface PharmacyListProps {
@@ -54,12 +55,12 @@ export const PharmacyList = ({
             <td className="px-4 py-3">{pharmacy.address}</td>
             <td className="px-4 py-3">{pharmacy.city}</td>
             <td className="px-4 py-3 text-right">
-              <button
+              <Link
                 className="mr-4 text-indigo-500 outline-none appearance-none hover:underline hover:text-indigo-600 focus:outline-none"
-                type="button"
+                to={`/pharmacy/${pharmacy.pharmacyNo}`}
               >
                 Redaguoti
-              </button>
+              </Link>
               <button
                 className="text-red-500 outline-none appearance-none hover:underline hover:text-red-600 focus:outline-none"
                 type="button"

@@ -2,6 +2,8 @@ import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CreatePharmacyDTO } from 'swagger/models';
 
+import { Layout } from 'components/Layout';
+
 import { PharmacyForm } from './components/PharmacyForm';
 import { createPharmacy } from './services/PharmacyService';
 
@@ -31,11 +33,13 @@ export const CreatePharmacy = (): JSX.Element => {
   };
 
   return (
-    <PharmacyForm
-      onSubmit={handleSubmit}
-      onClearError={handleClearError}
-      submitting={submitting}
-      error={error}
-    />
+    <Layout title="Pridėti vaistinę">
+      <PharmacyForm
+        onSubmit={handleSubmit}
+        onClearError={handleClearError}
+        submitting={submitting}
+        error={error}
+      />
+    </Layout>
   );
 };

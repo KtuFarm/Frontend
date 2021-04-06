@@ -6,3 +6,4 @@ export type CreatePharmacyDTO = components['schemas']['CreatePharmacyDTO'];
 export type WorkingHoursDTO = components['schemas']['WorkingHoursDTO'];
 export type GetMedicamentsDTO = components['schemas']['GetMedicamentsDTO'];
 export type MedicamentDTO = components['schemas']['MedicamentDTO'];
+export type PharmacyFullDTO = components['schemas']['PharmacyFullDTO'];

@@ -1,12 +1,11 @@
 import { useEffect, useState } from 'react';
 import {
   CreatePharmacyDTO,
-  PharmacyDTO,
+  PharmacyFullDTO,
   WorkingHoursDTO,
 } from 'swagger/models';
 
 import { Button } from 'components/Button';
-import { Header } from 'components/Header';
 import { Input } from 'components/Input';
 import { Label } from 'components/Label';
 import { Radio } from 'components/Radio';
@@ -26,11 +25,11 @@ const initialWorkingHours: WorkingHours = {
 };
 
 interface PharmacyFormProps {
-  pharmacy?: PharmacyDTO;
+  pharmacy?: PharmacyFullDTO | null;
   loading?: boolean;
   submitting: boolean;
   error?: string;
-  onSubmit: (pharmacy: PharmacyDTO) => unknown;
+  onSubmit: (pharmacy: CreatePharmacyDTO) => unknown;
   onClearError: () => unknown;
 }
 
@@ -39,12 +38,55 @@ export const PharmacyForm = ({
   submitting,
   onClearError,
   error,
+  pharmacy,
+  loading = false,
 }: PharmacyFormProps): JSX.Element => {
   const [address, setAddress] = useState('');
   const [city, setCity] = useState('');
   const [workingHours, setWorkingHours] = useState<WorkingHours[]>([
     { ...initialWorkingHours },
   ]);
+
+  useEffect(() => {
+    setAddress(pharmacy?.address ?? '');
+    setCity(pharmacy?.city ?? '');
+
+    const workingHoursDto = pharmacy?.workingHours ?? [];
+
+    const newWorkingHours = workingHoursDto.reduce<WorkingHours[]>(
+      (hours, currentHour) => {
+        const { dayOfWeek } = currentHour;
+
+        if (dayOfWeek === undefined || !(dayOfWeek >= 1 && dayOfWeek <= 7))
+          return hours;
+
+        const weekday = Weekdays[dayOfWeek - 1];
+
+        const existingHourIndex = hours.findIndex(
+          (hour) =>
+            hour.openTime === currentHour.openTime &&
+            hour.closeTime === currentHour.closeTime
+        );
+
+        if (existingHourIndex === -1) {
+          const newHour: WorkingHours = {
+            openTime: currentHour?.openTime ?? '',
+            closeTime: currentHour?.closeTime ?? '',
+            days: [weekday],
+          };
+
+          return [...hours, newHour];
+        }
+
+        const newHours = [...hours];
+        newHours[existingHourIndex].days.push(weekday);
+        return newHours;
+      },
+      []
+    );
+
+    if (newWorkingHours.length > 0) setWorkingHours(newWorkingHours);
+  }, [pharmacy]);
 
   useEffect(() => {
     onClearError();
@@ -138,126 +180,111 @@ export const PharmacyForm = ({
     setAddress(event.target.value);
   };
 
+  if (loading) {
+    return <p>Kraunama...</p>;
+  }
+
   return (
-    <div className="h-screen bg-gray-100">
-      <Header />
-      <section className="relative px-6 text-gray-600 body-font">
-        <div className="container p-8 mx-auto my-16 bg-white rounded shadow">
-          <div className="flex flex-col w-full mb-6">
-            <h1 className="text-2xl font-medium text-gray-900 sm:text-3xl title-font">
-              Pridėti vaistinę
-            </h1>
+    <form className="md:w-2/3" onSubmit={handleSubmit}>
+      <div className="flex flex-wrap -m-2">
+        <div className="w-1/2 p-2">
+          <div className="relative">
+            <Label htmlFor="address">Adresas</Label>
+            <Input
+              type="text"
+              id="address"
+              name="address"
+              value={address}
+              onChange={handleAddressChange}
+            />
           </div>
-          <form className="md:w-2/3" onSubmit={handleSubmit}>
-            <div className="flex flex-wrap -m-2">
-              <div className="w-1/2 p-2">
-                <div className="relative">
-                  <Label htmlFor="address">Adresas</Label>
-                  <Input
-                    type="text"
-                    id="address"
-                    name="address"
-                    value={address}
-                    onChange={handleAddressChange}
-                  />
-                </div>
-              </div>
+        </div>
 
-              <div className="w-1/2 p-2">
-                <div className="relative">
-                  <Label htmlFor="city">Miestas</Label>
-                  <Input
-                    type="text"
-                    id="city"
-                    name="city"
-                    value={city}
-                    onChange={handleCityChange}
-                  />
-                </div>
-              </div>
+        <div className="w-1/2 p-2">
+          <div className="relative">
+            <Label htmlFor="city">Miestas</Label>
+            <Input
+              type="text"
+              id="city"
+              name="city"
+              value={city}
+              onChange={handleCityChange}
+            />
+          </div>
+        </div>
 
-              <div className="w-full px-2 py-4">
-                <h3 className="text-lg font-medium leading-6 text-gray-900">
-                  Darbo laikas
-                </h3>
-                <p className="mt-1 text-sm text-gray-600">
-                  Nurodykite vaistinės darbo valandas
-                </p>
-              </div>
+        <div className="w-full px-2 py-4">
+          <h3 className="text-lg font-medium leading-6 text-gray-900">
+            Darbo laikas
+          </h3>
+          <p className="mt-1 text-sm text-gray-600">
+            Nurodykite vaistinės darbo valandas
+          </p>
+        </div>
 
-              <div className="w-full px-2 mb-4">
-                <Button.Secondary onClick={handleAddNewWorkingHours}>
-                  Pridėti darbo laiką
-                </Button.Secondary>
-              </div>
+        <div className="w-full px-2 mb-4">
+          <Button.Secondary onClick={handleAddNewWorkingHours}>
+            Pridėti darbo laiką
+          </Button.Secondary>
+        </div>
 
-              {workingHours.map((workTime, index) => (
-                <div key={index} className="w-full px-2 mb-4">
-                  <div className="flex">
-                    <div className="relative">
-                      <Label htmlFor="openingHours">Atidarymo laikas</Label>
-                      <Input
-                        type="time"
-                        id="openingHours"
-                        name="openingHours"
-                        value={workTime.openTime}
-                        onChange={(event) => handleOpenTimeChange(event, index)}
-                      />
-                    </div>
-                    <div className="relative sm:ml-4 sm:mr-2">
-                      <Label htmlFor="closingHours">Uždarymo laikas</Label>
-                      <Input
-                        type="time"
-                        id="closingHours"
-                        name="closingHours"
-                        value={workTime.closeTime}
-                        onChange={(event) =>
-                          handleCloseTimeChange(event, index)
-                        }
-                      />
-                    </div>
-                    {Weekdays.map((weekday) => {
-                      return (
-                        <div
-                          key={weekday}
-                          className="flex flex-col items-center px-1 sm:ml-2"
-                        >
-                          <Label htmlFor={weekday}>
-                            {dayAbbreviations[weekday]}
-                          </Label>
-                          <Radio
-                            id={weekday}
-                            name={weekday}
-                            className="mt-4"
-                            onChange={() => handleChangeDay(index, weekday)}
-                          />
-                        </div>
-                      );
-                    })}
-                    <div className="flex flex-col justify-end sm:ml-4">
-                      <Button.Danger
-                        onClick={() => handleRemoveWorkingHours(index)}
-                      >
-                        Pašalinti laiką
-                      </Button.Danger>
-                    </div>
+        {workingHours.map((workTime, index) => (
+          <div key={index} className="w-full px-2 mb-4">
+            <div className="flex">
+              <div className="relative">
+                <Label htmlFor="openingHours">Atidarymo laikas</Label>
+                <Input
+                  type="time"
+                  id="openingHours"
+                  name="openingHours"
+                  value={workTime.openTime}
+                  onChange={(event) => handleOpenTimeChange(event, index)}
+                />
+              </div>
+              <div className="relative sm:ml-4 sm:mr-2">
+                <Label htmlFor="closingHours">Uždarymo laikas</Label>
+                <Input
+                  type="time"
+                  id="closingHours"
+                  name="closingHours"
+                  value={workTime.closeTime}
+                  onChange={(event) => handleCloseTimeChange(event, index)}
+                />
+              </div>
+              {Weekdays.map((weekday) => {
+                return (
+                  <div
+                    key={weekday}
+                    className="flex flex-col items-center px-1 sm:ml-2"
+                  >
+                    <Label htmlFor={weekday}>{dayAbbreviations[weekday]}</Label>
+                    <Radio
+                      id={weekday}
+                      name={weekday}
+                      className="mt-4"
+                      checked={workTime.days.includes(weekday)}
+                      onChange={() => handleChangeDay(index, weekday)}
+                    />
                   </div>
-                </div>
-              ))}
-
-              {error !== '' ? (
-                <p className="mx-2 text-red-700">{error}</p>
-              ) : null}
-
-              <div className="w-full p-2">
-                <Button.Primary type="submit" disabled={submitting}>
-                  Pridėti vaistinę
-                </Button.Primary>
+                );
+              })}
+              <div className="flex flex-col justify-end sm:ml-4">
+                <Button.Danger onClick={() => handleRemoveWorkingHours(index)}>
+                  Pašalinti laiką
+                </Button.Danger>
               </div>
             </div>
-          </form>
+          </div>
+        ))}
+
+        {error !== '' ? <p className="mx-2 text-red-700">{error}</p> : null}
+
+        <div className="w-full p-2">
+          <Button.Primary type="submit" disabled={submitting}>
+            Pridėti vaistinę
+          </Button.Primary>
         </div>
-      </section>
-    </div>
+      </div>
+    </form>
   );
 };

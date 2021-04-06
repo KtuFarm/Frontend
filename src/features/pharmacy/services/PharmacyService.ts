@@ -17,3 +17,9 @@ export const getPharmacies = async (): Promise<Response> => {
     headers: DEFAULT_HEADERS,
   });
 };
+
+export const getPharmacy = async (id: number | string): Promise<Response> => {
+  return fetch(`${API_HOST}/api/v1/Pharmacies/${id}`, {
+    headers: DEFAULT_HEADERS,
+  });
+};
