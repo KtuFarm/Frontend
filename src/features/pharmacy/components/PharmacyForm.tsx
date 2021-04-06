@@ -1,4 +1,9 @@
 import { useEffect, useState } from 'react';
+import {
+  CreatePharmacyDTO,
+  PharmacyDTO,
+  WorkingHoursDTO,
+} from 'swagger/models';
 
 import { Button } from 'components/Button';
 import { Header } from 'components/Header';
@@ -6,8 +11,6 @@ import { Input } from 'components/Input';
 import { Label } from 'components/Label';
 import { Radio } from 'components/Radio';
 
-import { PharmacyDTO } from '../dtos/PharmacyDTO';
-import { WorkingHoursDTO } from '../dtos/WorkingHoursDTO';
 import {
   dayAbbreviations,
   dayToInt,
@@ -114,7 +117,7 @@ export const PharmacyForm = ({
       []
     );
 
-    const pharmacyDto: PharmacyDTO = {
+    const pharmacyDto: CreatePharmacyDTO = {
       address,
       city,
       workingHours: workingHoursDto,
