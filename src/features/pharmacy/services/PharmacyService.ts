@@ -1,8 +1,9 @@
+import { CreatePharmacyDTO } from 'swagger/models';
+
 import { API_HOST, DEFAULT_HEADERS } from '../../../constants';
-import { PharmacyDTO } from '../dtos/PharmacyDTO';
 
 export const createPharmacy = async (
-  pharmacy: PharmacyDTO
+  pharmacy: CreatePharmacyDTO
 ): Promise<Response> => {
   return fetch(`${API_HOST}/api/v1/Pharmacies`, {
     method: 'POST',

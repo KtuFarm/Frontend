@@ -1,8 +1,8 @@
 import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { CreatePharmacyDTO } from 'swagger/models';
 
 import { PharmacyForm } from './components/PharmacyForm';
-import { PharmacyDTO } from './dtos/PharmacyDTO';
 import { createPharmacy } from './services/PharmacyService';
 
 export const CreatePharmacy = (): JSX.Element => {
@@ -14,7 +14,7 @@ export const CreatePharmacy = (): JSX.Element => {
     setError('');
   }, []);
 
-  const handleSubmit = async (pharmacy: PharmacyDTO): Promise<void> => {
+  const handleSubmit = async (pharmacy: CreatePharmacyDTO): Promise<void> => {
     setSubmitting(true);
     try {
       const response = await createPharmacy(pharmacy);
