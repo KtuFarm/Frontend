@@ -4,6 +4,49 @@
  */
 
 export interface paths {
+  '/api/v1/Medicaments/{id}': {
+    get: {
+      parameters: {
+        path: {
+          id: number;
+        };
+        header: {
+          /** Api Request header */
+          'X-Api-Request': string;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            'text/plain': components['schemas']['GetMedicamentDTO'];
+            'application/json': components['schemas']['GetMedicamentDTO'];
+            'text/json': components['schemas']['GetMedicamentDTO'];
+          };
+        };
+      };
+    };
+  };
+  '/api/v1/Medicaments': {
+    get: {
+      parameters: {
+        header: {
+          /** Api Request header */
+          'X-Api-Request': string;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            'text/plain': components['schemas']['GetMedicamentsDTO'];
+            'application/json': components['schemas']['GetMedicamentsDTO'];
+            'text/json': components['schemas']['GetMedicamentsDTO'];
+          };
+        };
+      };
+    };
+  };
   '/api/v1/Pharmacies': {
     get: {
       parameters: {
@@ -92,7 +135,16 @@ export interface components {
     CreatePharmacyDTO: {
       address?: string | null;
       city?: string | null;
+      registersCount?: number;
       workingHours?: components['schemas']['WorkingHoursDTO'][] | null;
+    };
+    GetMedicamentDTO: {
+      meta?: components['schemas']['Meta'];
+      data?: components['schemas']['MedicamentDTO'];
+    };
+    GetMedicamentsDTO: {
+      meta?: components['schemas']['Meta'];
+      data?: components['schemas']['MedicamentDTO'][] | null;
     };
     GetPharmacyDTO: {
       meta?: components['schemas']['Meta'];
@@ -101,6 +153,20 @@ export interface components {
     GetPharmaciesDTO: {
       meta?: components['schemas']['Meta'];
       data?: components['schemas']['PharmacyDTO'][] | null;
+    };
+    MedicamentDTO: {
+      medicamentNo?: number;
+      name?: string | null;
+      activeSubstance?: string | null;
+      barCode?: string | null;
+      isPrescriptionRequired?: boolean;
+      isReimbursed?: boolean;
+      country?: string | null;
+      basePrice?: number;
+      surcharge?: number;
+      isSellable?: boolean;
+      reimbursePercentage?: number;
+      pharmaceuticalForm?: string | null;
     };
     MessageData: {
       message?: string | null;
