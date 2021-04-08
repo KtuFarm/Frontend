@@ -54,6 +54,8 @@ export const PharmacyForm = ({
   ]);
 
   useEffect(() => {
+    if (pharmacy === null) return;
+
     setAddress(pharmacy?.address ?? '');
     setCity(pharmacy?.city ?? '');
 
