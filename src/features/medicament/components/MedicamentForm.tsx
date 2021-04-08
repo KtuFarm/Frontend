@@ -1,11 +1,22 @@
 import { useState } from 'react';
+import { PharmaceuticalFormDTO } from 'swagger/models';
 
 import { Button } from 'components/Button';
 import { Input } from 'components/Input';
 import { Label } from 'components/Label';
 import { Select } from 'components/Select';
 
-export const MedicamentForm = (): JSX.Element => {
+import { pharmaceuticalFormTranslation } from '../models/PharmaceuticalForms';
+
+interface MedicamentFormProps {
+  pharmaceuticalForms: PharmaceuticalFormDTO[];
+  loading: boolean;
+  error: string;
+}
+
+export const MedicamentForm = ({
+  pharmaceuticalForms,
+}: MedicamentFormProps): JSX.Element => {
   const [isReimbursed, setIsReimbursed] = useState(false);
 
   const handleChangeReimbursed = (): void => {
@@ -42,7 +53,14 @@ export const MedicamentForm = (): JSX.Element => {
           <div className="relative">
             <Label htmlFor="pharmaceuticalForm">Vaisto forma</Label>
             <Select id="pharmaceuticalForm" name="pharmaceuticalForm">
-              <option>Tabletė</option>
+              {pharmaceuticalForms.map((form) => {
+                const formName = pharmaceuticalFormTranslation[form.name ?? ''];
+                return (
+                  <option key={form.id} value={form.id}>
+                    {formName}
+                  </option>
+                );
+              })}
             </Select>
           </div>
         </div>

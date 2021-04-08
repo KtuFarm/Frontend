@@ -5,3 +5,9 @@ export const getMedicaments = async (): Promise<Response> => {
     headers: DEFAULT_HEADERS,
   });
 };
+
+export const getPharmaceuticalForms = async (): Promise<Response> => {
+  return fetch(`${API_HOST}/api/v1/PharmaceuticalForms`, {
+    headers: DEFAULT_HEADERS,
+  });
+};
