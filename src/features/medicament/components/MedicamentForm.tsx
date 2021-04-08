@@ -68,9 +68,7 @@ export const MedicamentForm = ({
         <div className="w-1/2 p-2">
           <div className="relative">
             <Label htmlFor="country">Kilmės šalis</Label>
-            <Select id="country" name="country">
-              <option>&apos;Murica</option>
-            </Select>
+            <Input type="text" id="country" name="country" />
           </div>
         </div>
 
@@ -126,19 +124,14 @@ export const MedicamentForm = ({
         <div className="w-full p-2">
           <div className="relative">
             <Label htmlFor="basePrice">Bazinė kaina</Label>
-            <div className="flex mt-1 rounded-md shadow-sm">
-              <input
-                type="number"
-                name="basePrice"
-                id="basePrice"
-                min="0"
-                step="0.01"
-                className="z-10 flex-1 block w-full border-gray-300 rounded-none disabled:cursor-not-allowed disabled:bg-gray-100 focus:ring-indigo-500 focus:border-indigo-500 rounded-l-md sm:text-sm"
-              />
-              <span className="inline-flex items-center px-3 text-sm text-gray-500 border border-l-0 border-gray-300 rounded-r-md bg-gray-50">
-                €
-              </span>
-            </div>
+            <Input
+              type="number"
+              name="basePrice"
+              id="basePrice"
+              min="0"
+              step="0.01"
+              prepend="€"
+            />
           </div>
         </div>
 
@@ -172,55 +165,45 @@ export const MedicamentForm = ({
         <div className="w-1/2 p-2">
           <div className="relative">
             <Label htmlFor="reimbursePercentage">Kompensacija</Label>
-            <div className="flex mt-1 rounded-md shadow-sm">
-              <input
-                type="number"
-                name="reimbursePercentage"
-                id="reimbursePercentage"
-                min="0"
-                max="100"
-                step="1"
-                disabled={isReimbursed}
-                className="z-10 flex-1 block w-full border-gray-300 rounded-none disabled:cursor-not-allowed disabled:bg-gray-100 focus:ring-indigo-500 focus:border-indigo-500 rounded-l-md sm:text-sm"
-              />
-              <span className="inline-flex items-center px-3 text-sm text-gray-500 border border-l-0 border-gray-300 rounded-r-md bg-gray-50">
-                %
-              </span>
-            </div>
+            <Input
+              type="number"
+              name="reimbursePercentage"
+              id="reimbursePercentage"
+              min="0"
+              max="100"
+              step="1"
+              disabled={isReimbursed}
+              prepend="%"
+            />
           </div>
         </div>
 
         <div className="w-1/2 p-2">
           <div className="relative">
             <Label>Kaina su kompensacija</Label>
-            <Input type="number" disabled defaultValue={120} />
+            <Input type="number" disabled defaultValue={120} prepend="€" />
           </div>
         </div>
 
         <div className="w-1/2 p-2">
           <div className="relative">
             <Label htmlFor="surcharge">Antkainis</Label>
-            <div className="flex mt-1 rounded-md shadow-sm">
-              <input
-                type="number"
-                name="surcharge"
-                id="surcharge"
-                min="0"
-                max="100"
-                step="1"
-                className="z-10 flex-1 block w-full border-gray-300 rounded-none disabled:cursor-not-allowed disabled:bg-gray-100 focus:ring-indigo-500 focus:border-indigo-500 rounded-l-md sm:text-sm"
-              />
-              <span className="inline-flex items-center px-3 text-sm text-gray-500 border border-l-0 border-gray-300 rounded-r-md bg-gray-50">
-                %
-              </span>
-            </div>
+            <Input
+              type="number"
+              name="surcharge"
+              id="surcharge"
+              min="0"
+              max="100"
+              step="1"
+              prepend="%"
+            />
           </div>
         </div>
 
         <div className="w-1/2 p-2">
           <div className="relative">
             <Label>Galutinė kaina</Label>
-            <Input type="number" disabled defaultValue={120} />
+            <Input type="number" disabled defaultValue={120} prepend="€" />
           </div>
         </div>
 
