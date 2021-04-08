@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import {
   CreatePharmacyDTO,
+  EditPharmacyDTO,
   PharmacyFullDTO,
   WorkingHoursDTO,
 } from 'swagger/models';
@@ -25,11 +26,12 @@ const initialWorkingHours: WorkingHours = {
 };
 
 interface PharmacyFormProps {
+  createsNewPharmacy?: boolean;
   pharmacy?: PharmacyFullDTO | null;
   loading?: boolean;
   submitting: boolean;
   error?: string;
-  onSubmit: (pharmacy: CreatePharmacyDTO) => unknown;
+  onSubmit: (pharmacy: CreatePharmacyDTO | EditPharmacyDTO) => unknown;
   onClearError: () => unknown;
 }
 
@@ -40,9 +42,13 @@ export const PharmacyForm = ({
   error,
   pharmacy,
   loading = false,
+  createsNewPharmacy = false,
 }: PharmacyFormProps): JSX.Element => {
   const [address, setAddress] = useState('');
   const [city, setCity] = useState('');
+  const [registersCount, setRegistersCount] = useState<number | undefined>(
+    undefined
+  );
   const [workingHours, setWorkingHours] = useState<WorkingHours[]>([
     { ...initialWorkingHours },
   ]);
@@ -159,9 +165,10 @@ export const PharmacyForm = ({
       []
     );
 
-    const pharmacyDto: CreatePharmacyDTO = {
+    const pharmacyDto: CreatePharmacyDTO | EditPharmacyDTO = {
       address,
       city,
+      registersCount,
       workingHours: workingHoursDto,
     };
 
@@ -178,6 +185,21 @@ export const PharmacyForm = ({
     event: React.ChangeEvent<HTMLInputElement>
   ): void => {
     setAddress(event.target.value);
+  };
+
+  const handleRegisterCountChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ): void => {
+    const text = event.target.value;
+
+    if (text.length === 0) {
+      setRegistersCount(undefined);
+      return;
+    }
+
+    const newRegisterCount = Number(text.replace(/[^0-9]/g, ''));
+
+    setRegistersCount(newRegisterCount);
   };
 
   if (loading) {
@@ -212,6 +234,21 @@ export const PharmacyForm = ({
             />
           </div>
         </div>
+
+        {createsNewPharmacy ? (
+          <div className="w-full p-2">
+            <div className="relative">
+              <Label htmlFor="registerCount">Kasų skaičius</Label>
+              <Input
+                type="number"
+                id="registerCount"
+                name="registerCount"
+                value={registersCount}
+                onChange={handleRegisterCountChange}
+              />
+            </div>
+          </div>
+        ) : null}
 
         <div className="w-full px-2 py-4">
           <h3 className="text-lg font-medium leading-6 text-gray-900">

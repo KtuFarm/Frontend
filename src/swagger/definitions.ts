@@ -46,6 +46,26 @@ export interface paths {
         };
       };
     };
+    post: {
+      parameters: {
+        header: {
+          /** Api Request header */
+          'X-Api-Request': string;
+        };
+      };
+      responses: {
+        /** Success */
+        200: unknown;
+      };
+      requestBody: {
+        content: {
+          'application/json-patch+json': components['schemas']['CreateMedicamentDTO'];
+          'application/json': components['schemas']['CreateMedicamentDTO'];
+          'text/json': components['schemas']['CreateMedicamentDTO'];
+          'application/*+json': components['schemas']['CreateMedicamentDTO'];
+        };
+      };
+    };
   };
   '/api/v1/Pharmacies': {
     get: {
@@ -109,6 +129,29 @@ export interface paths {
         };
       };
     };
+    put: {
+      parameters: {
+        path: {
+          id: number;
+        };
+        header: {
+          /** Api Request header */
+          'X-Api-Request': string;
+        };
+      };
+      responses: {
+        /** Success */
+        200: unknown;
+      };
+      requestBody: {
+        content: {
+          'application/json-patch+json': components['schemas']['EditPharmacyDTO'];
+          'application/json': components['schemas']['EditPharmacyDTO'];
+          'text/json': components['schemas']['EditPharmacyDTO'];
+          'application/*+json': components['schemas']['EditPharmacyDTO'];
+        };
+      };
+    };
   };
   '/api/v1': {
     get: {
@@ -132,10 +175,28 @@ export interface paths {
 
 export interface components {
   schemas: {
+    CreateMedicamentDTO: {
+      name?: string | null;
+      activeSubstance?: string | null;
+      barCode?: string | null;
+      isPrescriptionRequired?: boolean | null;
+      isReimbursed?: boolean | null;
+      country?: string | null;
+      basePrice?: number | null;
+      surcharge?: number | null;
+      isSellable?: boolean | null;
+      reimbursePercentage?: number | null;
+      pharmaceuticalFormId?: number | null;
+    };
     CreatePharmacyDTO: {
       address?: string | null;
       city?: string | null;
       registersCount?: number;
+      workingHours?: components['schemas']['WorkingHoursDTO'][] | null;
+    };
+    EditPharmacyDTO: {
+      address?: string | null;
+      city?: string | null;
       workingHours?: components['schemas']['WorkingHoursDTO'][] | null;
     };
     GetMedicamentDTO: {

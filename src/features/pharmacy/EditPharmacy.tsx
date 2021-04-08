@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { CreatePharmacyDTO, PharmacyFullDTO } from 'swagger/models';
+import { EditPharmacyDTO, PharmacyFullDTO } from 'swagger/models';
 
 import { Layout } from 'components/Layout';
 
 import { PharmacyForm } from './components/PharmacyForm';
-import { getPharmacy } from './services/PharmacyService';
+import { getPharmacy, updatePharmacy } from './services/PharmacyService';
 
 export const EditPharmacy = (): JSX.Element => {
   const navigate = useNavigate();
@@ -38,12 +38,12 @@ export const EditPharmacy = (): JSX.Element => {
     setError('');
   }, []);
 
-  const handleSubmit = async (pharmacy: CreatePharmacyDTO): Promise<void> => {
+  const handleSubmit = async (pharmacy: EditPharmacyDTO): Promise<void> => {
     setSubmitting(true);
     try {
-      // const response = await createPharmacy(pharmacy);
-      // if (response.status !== 201)
-      // throw new Error('Nepavyko sukurti vaistinės');
+      const response = await updatePharmacy(pharmacyId, pharmacy);
+      if (response.status !== 200)
+        throw new Error('Nepavyko atnaujinti vaistinės');
       navigate('/pharmacy');
     } catch (error) {
       setError(error?.message ?? '');

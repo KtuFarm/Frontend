@@ -35,6 +35,7 @@ export const CreatePharmacy = (): JSX.Element => {
   return (
     <Layout title="Pridėti vaistinę">
       <PharmacyForm
+        createsNewPharmacy
         onSubmit={handleSubmit}
         onClearError={handleClearError}
         submitting={submitting}
