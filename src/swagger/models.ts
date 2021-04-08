@@ -9,3 +9,6 @@ export type EditPharmacyDTO = components['schemas']['EditPharmacyDTO'];
 
 export type GetMedicamentsDTO = components['schemas']['GetMedicamentsDTO'];
 export type MedicamentDTO = components['schemas']['MedicamentDTO'];
+
+export type PharmaceuticalFormDTO = components['schemas']['EnumDTO'];
+export type GetPharmaceuticalFormDTO = components['schemas']['GetEnumerableDTO'];
