@@ -11,8 +11,8 @@ export const Header = (): JSX.Element => {
           <span className="ml-3 text-xl">Vaistukai</span>
         </Link>
         <nav className="flex flex-wrap items-center justify-center text-base md:ml-auto">
-          <Link to="/employee/new" className="mr-5 hover:text-gray-900">
-            Darbuotojai
+          <Link to="/medicament" className="mr-5 hover:text-gray-900">
+            Vaistai
           </Link>
           <Link to="/pharmacy" className="mr-5 hover:text-gray-900">
             Vaistinės
