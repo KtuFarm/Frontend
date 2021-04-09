@@ -5,6 +5,7 @@ interface ModalProps {
   title: string;
   content: string;
   buttons?: ReactNode;
+  error?: string;
 }
 
 export const Modal = ({
@@ -12,6 +13,7 @@ export const Modal = ({
   title,
   content,
   buttons,
+  error,
 }: ModalProps): JSX.Element => {
   return (
     <div
@@ -51,6 +53,11 @@ export const Modal = ({
                 <div className="mt-2">
                   <p className="text-sm text-gray-500">{content}</p>
                 </div>
+                {error != null && error !== '' ? (
+                  <div className="mt-2">
+                    <p className="text-sm text-red-700">{error}</p>
+                  </div>
+                ) : null}
               </div>
             </div>
           </div>

@@ -9,29 +9,60 @@ import { Modal } from 'components/Modal';
 import { Pagination } from 'components/Pagination';
 
 import { PharmacyList } from './components/PharmacyList';
-import { getPharmacies } from './services/PharmacyService';
+import { getPharmacies, removePharmacy } from './services/PharmacyService';
 
 export const Pharmacies = (): JSX.Element => {
   const [error, setError] = useState('');
+  const [deleteError, setDeleteError] = useState('');
   const [loading, setLoading] = useState(false);
   const [pharmacies, setPhramacies] = useState<PharmacyDTO[]>([]);
+  const [deletePharmacyId, setDeletePharmacyId] = useState<number | undefined>(
+    undefined
+  );
+
+  const fetchPharmacies = async (): Promise<void> => {
+    setLoading(true);
+    try {
+      const response = await getPharmacies();
+      const data: GetPharmaciesDTO = await response.json();
+      setPhramacies(data.data as PharmacyDTO[]);
+    } catch (error) {
+      setError(error?.message ?? '');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchPharmacies = async (): Promise<void> => {
-      setLoading(true);
-      try {
-        const response = await getPharmacies();
-        const data: GetPharmaciesDTO = await response.json();
-        setPhramacies(data.data as PharmacyDTO[]);
-      } catch (error) {
-        setError(error?.message ?? '');
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchPharmacies();
   }, []);
+
+  const handleCloseModal = (): void => {
+    setDeleteError('');
+    setDeletePharmacyId(undefined);
+  };
+
+  const handleDelete = (pharmacyId: number): void => {
+    setDeletePharmacyId(pharmacyId);
+  };
+
+  const handleDeleteConfirm = async (): Promise<void> => {
+    if (deletePharmacyId === undefined) return;
+
+    try {
+      const response = await removePharmacy(deletePharmacyId);
+
+      if (response.status !== 200)
+        throw new Error('Nepavyko ištrinti vaistinės');
+
+      handleCloseModal();
+      await fetchPharmacies();
+    } catch (error) {
+      setDeleteError(error?.message ?? '');
+    }
+  };
+
+  const isDeleteModalOpen = deletePharmacyId !== undefined;
 
   return (
     <Container>
@@ -45,17 +76,27 @@ export const Pharmacies = (): JSX.Element => {
             <Button.Primary>Pridėti vaistinę</Button.Primary>
           </Link>
         </div>
-        <PharmacyList pharmacies={pharmacies} error={error} loading={loading} />
+        <PharmacyList
+          pharmacies={pharmacies}
+          error={error}
+          loading={loading}
+          onDelete={handleDelete}
+        />
       </Content>
       <Pagination />
       <Modal
-        isOpen={false}
+        isOpen={isDeleteModalOpen}
         title="Ištrinti vaistinę"
         content="Ar tikrai norite ištrinti vaistinę? Vaistinės duomenys bus pašalinti visam laikui. Šio veiksmo negalima anuliuoti."
+        error={deleteError}
         buttons={
           <>
-            <Button.Danger className="sm:ml-2">Ištrinti</Button.Danger>
-            <Button.Secondary>Atšaukti</Button.Secondary>
+            <Button.Danger className="sm:ml-2" onClick={handleDeleteConfirm}>
+              Ištrinti
+            </Button.Danger>
+            <Button.Secondary onClick={handleCloseModal}>
+              Atšaukti
+            </Button.Secondary>
           </>
         }
       />

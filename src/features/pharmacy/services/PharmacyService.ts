@@ -34,3 +34,12 @@ export const updatePharmacy = async (
     body: JSON.stringify(pharmacy),
   });
 };
+
+export const removePharmacy = async (
+  id: number | string
+): Promise<Response> => {
+  return fetch(`${API_HOST}/api/v1/Pharmacies/${id}`, {
+    method: 'DELETE',
+    headers: DEFAULT_HEADERS,
+  });
+};

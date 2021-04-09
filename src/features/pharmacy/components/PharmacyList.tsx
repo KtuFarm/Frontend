@@ -5,13 +5,19 @@ interface PharmacyListProps {
   pharmacies: PharmacyDTO[];
   error: string;
   loading: boolean;
+  onDelete: (pharmacyId: number) => void;
 }
 
 export const PharmacyList = ({
   pharmacies,
   error,
   loading,
+  onDelete,
 }: PharmacyListProps): JSX.Element => {
+  const handleDelete = (pharmacyId: number | undefined): void => {
+    if (pharmacyId) onDelete(pharmacyId);
+  };
+
   if (error) {
     return (
       <div className="pb-4">
@@ -64,6 +70,7 @@ export const PharmacyList = ({
               <button
                 className="text-red-500 outline-none appearance-none hover:underline hover:text-red-600 focus:outline-none"
                 type="button"
+                onClick={() => handleDelete(pharmacy.pharmacyNo)}
               >
                 Pašalinti
               </button>
