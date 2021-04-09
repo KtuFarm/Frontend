@@ -7,8 +7,8 @@ import { CreatePharmacy, EditPharmacy, Pharmacies } from 'features/pharmacy';
 export const App = (): JSX.Element => {
   return (
     <Routes>
-      <Route path="/" element={<Login />} />
-      <Route path="/home" element={<Home />} />
+      <Route path="/" element={<Home />} />
+      <Route path="/login" element={<Login />} />
       <Route path="/pharmacy" element={<Pharmacies />} />
       <Route path="/pharmacy/new" element={<CreatePharmacy />} />
       <Route path="/pharmacy/:id" element={<EditPharmacy />} />
