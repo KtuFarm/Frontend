@@ -22,6 +22,10 @@ interface MedicamentFormProps {
 export const MedicamentForm = ({
   pharmaceuticalForms,
   onClearError,
+  loading,
+  error,
+  submitting,
+  onSubmit,
 }: MedicamentFormProps): JSX.Element => {
   const [name, setName] = useState('');
   const [activeSubstance, setActiveSubstance] = useState('');
@@ -105,6 +109,26 @@ export const MedicamentForm = ({
     setSurcharge(event.target.valueAsNumber);
   };
 
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
+    event.preventDefault();
+
+    const medicamentDto: CreateMedicamentDTO = {
+      name,
+      activeSubstance,
+      barCode,
+      isPrescriptionRequired,
+      isReimbursed,
+      country,
+      basePrice,
+      surcharge,
+      reimbursePercentage,
+      pharmaceuticalFormId,
+      isSellable: true,
+    };
+
+    onSubmit(medicamentDto);
+  };
+
   const reimbursedPrice =
     basePrice !== undefined && reimbursePercentage !== undefined
       ? calculateReimbursedPrice(basePrice, reimbursePercentage)
@@ -117,8 +141,12 @@ export const MedicamentForm = ({
       ? calculateTotalPrice(price, surcharge)
       : undefined;
 
+  if (loading) {
+    return <p>Kraunama...</p>;
+  }
+
   return (
-    <form className="md:w-2/3">
+    <form className="md:w-2/3" onSubmit={handleSubmit}>
       <div className="flex flex-wrap -m-2">
         <div className="w-full px-2 py-4">
           <h3 className="text-lg font-medium leading-6 text-gray-900">
@@ -346,10 +374,14 @@ export const MedicamentForm = ({
           </div>
         </div>
 
-        <p className="mx-2 text-red-700">error</p>
+        {error != null && error !== '' ? (
+          <p className="mx-2 text-red-700">{error}</p>
+        ) : null}
 
         <div className="w-full p-2">
-          <Button.Primary type="submit">Pridėti vaistą</Button.Primary>
+          <Button.Primary type="submit" disabled={submitting}>
+            Pridėti vaistą
+          </Button.Primary>
         </div>
       </div>
     </form>

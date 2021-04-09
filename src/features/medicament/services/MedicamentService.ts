@@ -1,3 +1,5 @@
+import { CreateMedicamentDTO } from 'swagger/models';
+
 import { API_HOST, DEFAULT_HEADERS } from '../../../constants';
 
 export const getMedicaments = async (): Promise<Response> => {
@@ -9,5 +11,15 @@ export const getMedicaments = async (): Promise<Response> => {
 export const getPharmaceuticalForms = async (): Promise<Response> => {
   return fetch(`${API_HOST}/api/v1/PharmaceuticalForms`, {
     headers: DEFAULT_HEADERS,
+  });
+};
+
+export const createMedicament = async (
+  medicament: CreateMedicamentDTO
+): Promise<Response> => {
+  return fetch(`${API_HOST}/api/v1/Medicaments`, {
+    method: 'POST',
+    headers: DEFAULT_HEADERS,
+    body: JSON.stringify(medicament),
   });
 };

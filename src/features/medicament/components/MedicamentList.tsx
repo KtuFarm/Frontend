@@ -1,5 +1,6 @@
 import { MedicamentDTO } from 'swagger/models';
 
+import { calculateReimbursedPrice } from '../utils/calculateReimbursedPrice';
 import { calculateTotalPrice } from '../utils/calculateTotalPrice';
 
 interface MedicamentListProps {
@@ -56,19 +57,28 @@ export const MedicamentList = ({
             activeSubstance,
             basePrice,
             surcharge,
+            isReimbursed,
+            reimbursePercentage,
           } = medicament;
 
+          const reimbursedPrice =
+            basePrice !== undefined && reimbursePercentage !== undefined
+              ? calculateReimbursedPrice(basePrice, reimbursePercentage)
+              : undefined;
+
+          const price = isReimbursed ? reimbursedPrice : basePrice;
+
           const totalPrice =
-            basePrice !== undefined && surcharge !== undefined
-              ? `${calculateTotalPrice(basePrice, surcharge).toFixed(2)}€`
-              : '-';
+            price !== undefined && surcharge !== undefined
+              ? calculateTotalPrice(price, surcharge)
+              : undefined;
 
           return (
             <tr key={medicamentNo}>
               <td className="px-4 py-3">{index + 1}</td>
               <td className="px-4 py-3">{name}</td>
               <td className="px-4 py-3">{activeSubstance}</td>
-              <td className="px-4 py-3">{totalPrice}</td>
+              <td className="px-4 py-3">{totalPrice?.toFixed(2) ?? '-'}€</td>
               <td className="px-4 py-3 text-right">
                 <button
                   className="mr-4 text-indigo-500 outline-none appearance-none hover:underline hover:text-indigo-600 focus:outline-none"
