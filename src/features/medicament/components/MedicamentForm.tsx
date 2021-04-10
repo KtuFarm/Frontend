@@ -123,7 +123,6 @@ export const MedicamentForm = ({
       surcharge,
       reimbursePercentage,
       pharmaceuticalFormId,
-      isSellable: true,
     };
 
     onSubmit(medicamentDto);
