@@ -4,29 +4,6 @@
  */
 
 export interface paths {
-  '/api/v1/Medicaments/{id}': {
-    get: {
-      parameters: {
-        path: {
-          id: number;
-        };
-        header: {
-          /** Api Request header */
-          'X-Api-Request': string;
-        };
-      };
-      responses: {
-        /** Success */
-        200: {
-          content: {
-            'text/plain': components['schemas']['GetMedicamentDTO'];
-            'application/json': components['schemas']['GetMedicamentDTO'];
-            'text/json': components['schemas']['GetMedicamentDTO'];
-          };
-        };
-      };
-    };
-  };
   '/api/v1/Medicaments': {
     get: {
       parameters: {
@@ -67,6 +44,87 @@ export interface paths {
       };
     };
   };
+  '/api/v1/Medicaments/{id}': {
+    get: {
+      parameters: {
+        path: {
+          id: number;
+        };
+        header: {
+          /** Api Request header */
+          'X-Api-Request': string;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            'text/plain': components['schemas']['GetMedicamentDTO'];
+            'application/json': components['schemas']['GetMedicamentDTO'];
+            'text/json': components['schemas']['GetMedicamentDTO'];
+          };
+        };
+      };
+    };
+    put: {
+      parameters: {
+        path: {
+          id: number;
+        };
+        header: {
+          /** Api Request header */
+          'X-Api-Request': string;
+        };
+      };
+      responses: {
+        /** Success */
+        200: unknown;
+      };
+      requestBody: {
+        content: {
+          'application/json-patch+json': components['schemas']['EditMedicamentDTO'];
+          'application/json': components['schemas']['EditMedicamentDTO'];
+          'text/json': components['schemas']['EditMedicamentDTO'];
+          'application/*+json': components['schemas']['EditMedicamentDTO'];
+        };
+      };
+    };
+    delete: {
+      parameters: {
+        path: {
+          id: number;
+        };
+        header: {
+          /** Api Request header */
+          'X-Api-Request': string;
+        };
+      };
+      responses: {
+        /** Success */
+        200: unknown;
+      };
+    };
+  };
+  '/api/v1/PharmaceuticalForms': {
+    get: {
+      parameters: {
+        header: {
+          /** Api Request header */
+          'X-Api-Request': string;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            'text/plain': components['schemas']['GetEnumerableDTO'];
+            'application/json': components['schemas']['GetEnumerableDTO'];
+            'text/json': components['schemas']['GetEnumerableDTO'];
+          };
+        };
+      };
+    };
+  };
   '/api/v1/Pharmacies': {
     get: {
       parameters: {
@@ -103,6 +161,26 @@ export interface paths {
           'application/json': components['schemas']['CreatePharmacyDTO'];
           'text/json': components['schemas']['CreatePharmacyDTO'];
           'application/*+json': components['schemas']['CreatePharmacyDTO'];
+        };
+      };
+    };
+  };
+  '/api/v1/Pharmacies/all': {
+    get: {
+      parameters: {
+        header: {
+          /** Api Request header */
+          'X-Api-Request': string;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            'text/plain': components['schemas']['GetPharmaciesDTO'];
+            'application/json': components['schemas']['GetPharmaciesDTO'];
+            'text/json': components['schemas']['GetPharmaciesDTO'];
+          };
         };
       };
     };
@@ -152,6 +230,107 @@ export interface paths {
         };
       };
     };
+    delete: {
+      parameters: {
+        path: {
+          id: number;
+        };
+        header: {
+          /** Api Request header */
+          'X-Api-Request': string;
+        };
+      };
+      responses: {
+        /** Success */
+        200: unknown;
+      };
+    };
+  };
+  '/api/v1/Users': {
+    get: {
+      parameters: {
+        header: {
+          /** Api Request header */
+          'X-Api-Request': string;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            'text/plain': components['schemas']['UserDTO'];
+            'application/json': components['schemas']['UserDTO'];
+            'text/json': components['schemas']['UserDTO'];
+          };
+        };
+      };
+    };
+    post: {
+      parameters: {
+        header: {
+          /** Api Request header */
+          'X-Api-Request': string;
+        };
+      };
+      responses: {
+        /** Success */
+        200: unknown;
+      };
+      requestBody: {
+        content: {
+          'application/json-patch+json': components['schemas']['CreateUserDTO'];
+          'application/json': components['schemas']['CreateUserDTO'];
+          'text/json': components['schemas']['CreateUserDTO'];
+          'application/*+json': components['schemas']['CreateUserDTO'];
+        };
+      };
+    };
+  };
+  '/api/v1/Users/{id}': {
+    get: {
+      parameters: {
+        path: {
+          id: number;
+        };
+        header: {
+          /** Api Request header */
+          'X-Api-Request': string;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            'text/plain': components['schemas']['GetPharmacyDTO'];
+            'application/json': components['schemas']['GetPharmacyDTO'];
+            'text/json': components['schemas']['GetPharmacyDTO'];
+          };
+        };
+      };
+    };
+    put: {
+      parameters: {
+        path: {
+          id: number;
+        };
+        header: {
+          /** Api Request header */
+          'X-Api-Request': string;
+        };
+      };
+      responses: {
+        /** Success */
+        200: unknown;
+      };
+      requestBody: {
+        content: {
+          'application/json-patch+json': components['schemas']['EditUserDTO'];
+          'application/json': components['schemas']['EditUserDTO'];
+          'text/json': components['schemas']['EditUserDTO'];
+          'application/*+json': components['schemas']['EditUserDTO'];
+        };
+      };
+    };
   };
   '/api/v1': {
     get: {
@@ -179,14 +358,13 @@ export interface components {
       name?: string | null;
       activeSubstance?: string | null;
       barCode?: string | null;
-      isPrescriptionRequired?: boolean | null;
-      isReimbursed?: boolean | null;
+      pharmaceuticalFormId?: number;
       country?: string | null;
-      basePrice?: number | null;
-      surcharge?: number | null;
-      isSellable?: boolean | null;
+      isPrescriptionRequired?: boolean;
+      basePrice?: number;
+      surcharge?: number;
+      isReimbursed?: boolean;
       reimbursePercentage?: number | null;
-      pharmaceuticalFormId?: number | null;
     };
     CreatePharmacyDTO: {
       address?: string | null;
@@ -194,10 +372,39 @@ export interface components {
       registersCount?: number;
       workingHours?: components['schemas']['WorkingHoursDTO'][] | null;
     };
+    CreateUserDTO: {
+      name?: string | null;
+      surname?: string | null;
+      position?: string | null;
+      pharmacyId?: number | null;
+    };
+    EditMedicamentDTO: {
+      isPrescriptionRequired?: boolean | null;
+      basePrice?: number | null;
+      surcharge?: number | null;
+      isReimbursed?: boolean | null;
+      reimbursePercentage?: number | null;
+    };
     EditPharmacyDTO: {
       address?: string | null;
       city?: string | null;
       workingHours?: components['schemas']['WorkingHoursDTO'][] | null;
+    };
+    EditUserDTO: {
+      name?: string | null;
+      surname?: string | null;
+      position?: string | null;
+      pharmacyId?: number | null;
+      dismissalDate?: string | null;
+      employeeState?: string | null;
+    };
+    EnumDTO: {
+      id?: number;
+      name?: string | null;
+    };
+    GetEnumerableDTO: {
+      meta?: components['schemas']['Meta'];
+      data?: components['schemas']['EnumDTO'][] | null;
     };
     GetMedicamentDTO: {
       meta?: components['schemas']['Meta'];
@@ -216,18 +423,12 @@ export interface components {
       data?: components['schemas']['PharmacyDTO'][] | null;
     };
     MedicamentDTO: {
-      medicamentNo?: number;
+      id?: number;
       name?: string | null;
       activeSubstance?: string | null;
       barCode?: string | null;
+      price?: number;
       isPrescriptionRequired?: boolean;
-      isReimbursed?: boolean;
-      country?: string | null;
-      basePrice?: number;
-      surcharge?: number;
-      isSellable?: boolean;
-      reimbursePercentage?: number;
-      pharmaceuticalForm?: string | null;
     };
     MessageData: {
       message?: string | null;
@@ -244,9 +445,23 @@ export interface components {
     };
     PharmacyFullDTO: {
       workingHours?: components['schemas']['WorkingHoursDTO'][] | null;
+      registers?: components['schemas']['RegisterDTO'][] | null;
       pharmacyNo?: number;
       address?: string | null;
       city?: string | null;
+    };
+    RegisterDTO: {
+      id?: number;
+      cash?: number;
+    };
+    UserDTO: {
+      id?: number;
+      name?: string | null;
+      surname?: string | null;
+      registrationDate?: string;
+      dismissalDate?: string | null;
+      position?: string | null;
+      employeeState?: string | null;
     };
     WorkingHoursDTO: {
       openTime?: string | null;

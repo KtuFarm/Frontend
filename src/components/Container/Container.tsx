@@ -12,7 +12,7 @@ export const Container = ({
   withHeader = true,
 }: ContainerProps): JSX.Element => {
   return (
-    <div className="h-screen bg-gray-100">
+    <div className="h-full min-h-screen pb-8 bg-gray-100">
       {withHeader ? <Header /> : null}
       <section className="relative px-6 text-gray-600 body-font">
         {children}

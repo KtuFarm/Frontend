@@ -1,7 +1,5 @@
 import { MedicamentDTO } from 'swagger/models';
 
-import { calculateTotalPrice } from '../utils/calculateTotalPrice';
-
 interface MedicamentListProps {
   medicaments: MedicamentDTO[];
   error: string;
@@ -43,32 +41,37 @@ export const MedicamentList = ({
         <tr className="text-sm font-medium tracking-wider text-gray-900 border-b-2 border-gray-400 title-font">
           <th className="px-4 py-3">#</th>
           <th className="px-4 py-3">Vaistas</th>
-          <th className="px-4 py-3">Veiklioji medžiaga</th>
+          <th className="px-4 py-3">Barkodas</th>
           <th className="px-4 py-3">Kaina</th>
+          <th className="px-4 py-3">Reikalingas receptas</th>
           <th className="px-4 py-3"></th>
         </tr>
       </thead>
       <tbody>
         {medicaments.map((medicament, index) => {
           const {
-            medicamentNo,
+            id,
             name,
             activeSubstance,
-            basePrice,
-            surcharge,
+            barCode,
+            price,
+            isPrescriptionRequired,
           } = medicament;
 
-          const totalPrice =
-            basePrice !== undefined && surcharge !== undefined
-              ? `${calculateTotalPrice(basePrice, surcharge).toFixed(2)}€`
-              : '-';
-
           return (
-            <tr key={medicamentNo}>
+            <tr key={id}>
               <td className="px-4 py-3">{index + 1}</td>
-              <td className="px-4 py-3">{name}</td>
-              <td className="px-4 py-3">{activeSubstance}</td>
-              <td className="px-4 py-3">{totalPrice}</td>
+              <td className="px-4 py-3">
+                <div className="flex flex-col">
+                  <span className="font-semibold">{name}</span>
+                  <span className="text-sm">{activeSubstance}</span>
+                </div>
+              </td>
+              <td className="px-4 py-3">{barCode}</td>
+              <td className="px-4 py-3">{price?.toFixed(2)}€</td>
+              <td className="px-4 py-3">
+                {isPrescriptionRequired ? 'Taip' : ''}
+              </td>
               <td className="px-4 py-3 text-right">
                 <button
                   className="mr-4 text-indigo-500 outline-none appearance-none hover:underline hover:text-indigo-600 focus:outline-none"
