@@ -23,3 +23,12 @@ export const createMedicament = async (
     body: JSON.stringify(medicament),
   });
 };
+
+export const removeMedicament = async (
+  id: number | string
+): Promise<Response> => {
+  return fetch(`${API_HOST}/api/v1/Medicaments/${id}`, {
+    method: 'DELETE',
+    headers: DEFAULT_HEADERS,
+  });
+};
