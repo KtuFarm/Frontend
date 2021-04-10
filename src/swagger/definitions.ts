@@ -408,7 +408,7 @@ export interface components {
     };
     GetMedicamentDTO: {
       meta?: components['schemas']['Meta'];
-      data?: components['schemas']['MedicamentDTO'];
+      data?: components['schemas']['MedicamentFullDTO'];
     };
     GetMedicamentsDTO: {
       meta?: components['schemas']['Meta'];
@@ -423,6 +423,20 @@ export interface components {
       data?: components['schemas']['PharmacyDTO'][] | null;
     };
     MedicamentDTO: {
+      id?: number;
+      name?: string | null;
+      activeSubstance?: string | null;
+      barCode?: string | null;
+      price?: number;
+      isPrescriptionRequired?: boolean;
+    };
+    MedicamentFullDTO: {
+      country?: string | null;
+      manufacturer?: string | null;
+      pharmaceuticalForm?: string | null;
+      isReimbursed?: boolean;
+      reimbursePercentage?: number | null;
+      priceWithoutReimburse?: number | null;
       id?: number;
       name?: string | null;
       activeSubstance?: string | null;
