@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import {
-  CreateMedicamentDTO,
   EditMedicamentDTO,
+  MedicamentFullDTO,
   PharmaceuticalFormDTO,
 } from 'swagger/models';
 
@@ -10,18 +10,40 @@ import { Layout } from 'components/Layout';
 
 import { MedicamentForm } from './components/MedicamentForm';
 import {
-  createMedicament,
+  getMedicament,
   getPharmaceuticalForms,
+  updateMedicament,
 } from './services/MedicamentService';
 
-export const CreateMedicament = (): JSX.Element => {
+export const EditMedicament = (): JSX.Element => {
   const navigate = useNavigate();
+  const params = useParams();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [pharmaceuticalForms, setPharmaceuticalForms] = useState<
     PharmaceuticalFormDTO[]
   >([]);
+  const [medicament, setMedicament] = useState<MedicamentFullDTO | null>(null);
+
+  const medicamentId = params?.id ?? '';
+
+  useEffect(() => {
+    const fetchMedicament = async (): Promise<void> => {
+      setLoading(true);
+      try {
+        const response = await getMedicament(medicamentId);
+        const data = await response.json();
+        setMedicament(data?.data as MedicamentFullDTO);
+      } catch (error) {
+        setError(error?.message ?? '');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchMedicament();
+  }, [medicamentId]);
 
   useEffect(() => {
     const fetchPharmaceuticalForms = async (): Promise<void> => {
@@ -44,14 +66,13 @@ export const CreateMedicament = (): JSX.Element => {
     setError('');
   }, []);
 
-  const handleSubmit = async (
-    medicament: CreateMedicamentDTO & EditMedicamentDTO
-  ): Promise<void> => {
+  const handleSubmit = async (medicament: EditMedicamentDTO): Promise<void> => {
     setSubmitting(true);
     try {
-      const response = await createMedicament(medicament);
+      const response = await updateMedicament(medicamentId, medicament);
 
-      if (response.status !== 201) throw new Error('Nepavyko sukurti vaisto');
+      if (response.status !== 200)
+        throw new Error('Nepavyko atnaujinti vaisto');
 
       navigate('/medicament');
     } catch (error) {
@@ -61,15 +82,15 @@ export const CreateMedicament = (): JSX.Element => {
     }
   };
   return (
-    <Layout title="Pridėti vaistą">
+    <Layout title="Atnaujinti vaistą">
       <MedicamentForm
-        createsNewMedicament
         pharmaceuticalForms={pharmaceuticalForms}
         loading={loading}
         error={error}
         submitting={submitting}
         onSubmit={handleSubmit}
         onClearError={handleClearError}
+        medicament={medicament}
       />
     </Layout>
   );

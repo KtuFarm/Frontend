@@ -1,5 +1,10 @@
 import { useEffect, useState } from 'react';
-import { CreateMedicamentDTO, PharmaceuticalFormDTO } from 'swagger/models';
+import {
+  CreateMedicamentDTO,
+  EditMedicamentDTO,
+  MedicamentFullDTO,
+  PharmaceuticalFormDTO,
+} from 'swagger/models';
 
 import { Button } from 'components/Button';
 import { Input } from 'components/Input';
@@ -15,8 +20,10 @@ interface MedicamentFormProps {
   loading: boolean;
   error: string;
   submitting: boolean;
-  onSubmit: (medicament: CreateMedicamentDTO) => unknown;
+  medicament?: MedicamentFullDTO | null;
+  onSubmit: (medicament: CreateMedicamentDTO & EditMedicamentDTO) => unknown;
   onClearError: () => unknown;
+  createsNewMedicament?: boolean;
 }
 
 export const MedicamentForm = ({
@@ -26,6 +33,8 @@ export const MedicamentForm = ({
   error,
   submitting,
   onSubmit,
+  medicament,
+  createsNewMedicament = false,
 }: MedicamentFormProps): JSX.Element => {
   const [name, setName] = useState('');
   const [activeSubstance, setActiveSubstance] = useState('');
@@ -52,6 +61,37 @@ export const MedicamentForm = ({
     reimbursePercentage,
     surcharge,
   ]);
+
+  useEffect(() => {
+    if (medicament === null) return;
+    setName(medicament?.name ?? '');
+    setActiveSubstance(medicament?.activeSubstance ?? '');
+    setCountry(medicament?.country ?? '');
+    setBarCode(medicament?.barCode ?? '');
+    setIsPrescriptionRequired(medicament?.isPrescriptionRequired ?? false);
+    setBasePrice(medicament?.basePrice ?? undefined);
+    setIsReimbursed(medicament?.isReimbursed ?? false);
+    setReimbursePercentage(
+      medicament?.reimbursePercentage !== undefined &&
+        medicament?.reimbursePercentage !== null
+        ? medicament?.reimbursePercentage
+        : undefined
+    );
+    setSurcharge(
+      medicament?.surcharge !== undefined ? medicament?.surcharge : 0
+    );
+  }, [medicament, pharmaceuticalForms]);
+
+  useEffect(() => {
+    if (medicament === null) return;
+
+    const newPharmaceuticalFormId =
+      pharmaceuticalForms.find(
+        (form) => form.name === medicament?.pharmaceuticalForm
+      )?.id ?? -1;
+
+    setPharmaceuticalFormId(newPharmaceuticalFormId);
+  }, [medicament, pharmaceuticalForms]);
 
   const handleChangeName = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -120,25 +160,28 @@ export const MedicamentForm = ({
       isReimbursed,
       country,
       basePrice,
-      surcharge,
-      reimbursePercentage,
+      surcharge: surcharge !== undefined ? surcharge / 100 : undefined,
+      reimbursePercentage:
+        reimbursePercentage !== undefined
+          ? reimbursePercentage / 100
+          : undefined,
       pharmaceuticalFormId,
     };
 
     onSubmit(medicamentDto);
   };
 
-  const reimbursedPrice =
-    basePrice !== undefined && reimbursePercentage !== undefined
-      ? calculateReimbursedPrice(basePrice, reimbursePercentage)
-      : undefined;
-
-  const price = isReimbursed ? reimbursedPrice : basePrice;
-
   const totalPrice =
-    price !== undefined && surcharge !== undefined
-      ? calculateTotalPrice(price, surcharge)
+    basePrice !== undefined && surcharge !== undefined
+      ? calculateTotalPrice(basePrice, surcharge)
       : undefined;
+
+  const reimbursedPrice =
+    totalPrice !== undefined && reimbursePercentage !== undefined
+      ? calculateReimbursedPrice(totalPrice, reimbursePercentage)
+      : undefined;
+
+  const price = isReimbursed ? reimbursedPrice : totalPrice;
 
   if (loading) {
     return <p>Kraunama...</p>;
@@ -165,6 +208,7 @@ export const MedicamentForm = ({
               name="name"
               value={name}
               onChange={handleChangeName}
+              disabled={!createsNewMedicament}
             />
           </div>
         </div>
@@ -178,6 +222,7 @@ export const MedicamentForm = ({
               name="activeSubstance"
               value={activeSubstance}
               onChange={handleChangeActiveSubstance}
+              disabled={!createsNewMedicament}
             />
           </div>
         </div>
@@ -190,6 +235,7 @@ export const MedicamentForm = ({
               name="pharmaceuticalForm"
               value={pharmaceuticalFormId}
               onChange={handleChangePharmaceuticalForm}
+              disabled={!createsNewMedicament}
             >
               {pharmaceuticalForms.map((form) => {
                 const formName = pharmaceuticalFormTranslation[form.name ?? ''];
@@ -212,6 +258,7 @@ export const MedicamentForm = ({
               name="country"
               value={country}
               onChange={handleChangeCountry}
+              disabled={!createsNewMedicament}
             />
           </div>
         </div>
@@ -236,6 +283,7 @@ export const MedicamentForm = ({
               name="barCode"
               value={barCode}
               onChange={handleChangeBarCode}
+              disabled={!createsNewMedicament}
             />
           </div>
         </div>
@@ -316,6 +364,35 @@ export const MedicamentForm = ({
 
         <div className="w-1/2 p-2">
           <div className="relative">
+            <Label htmlFor="surcharge">Antkainis</Label>
+            <Input
+              type="number"
+              name="surcharge"
+              id="surcharge"
+              min="0"
+              max="100"
+              step="1"
+              prepend="%"
+              value={surcharge}
+              onChange={handleChangeSurcharge}
+            />
+          </div>
+        </div>
+
+        <div className="w-1/2 p-2">
+          <div className="relative">
+            <Label>Kaina su antkainiu</Label>
+            <Input
+              type="number"
+              disabled
+              value={totalPrice?.toFixed(2)}
+              prepend="€"
+            />
+          </div>
+        </div>
+
+        <div className="w-1/2 p-2">
+          <div className="relative">
             <Label htmlFor="reimbursePercentage">Kompensacija</Label>
             <Input
               type="number"
@@ -344,22 +421,7 @@ export const MedicamentForm = ({
           </div>
         </div>
 
-        <div className="w-1/2 p-2">
-          <div className="relative">
-            <Label htmlFor="surcharge">Antkainis</Label>
-            <Input
-              type="number"
-              name="surcharge"
-              id="surcharge"
-              min="0"
-              max="100"
-              step="1"
-              prepend="%"
-              value={surcharge}
-              onChange={handleChangeSurcharge}
-            />
-          </div>
-        </div>
+        <div className="w-1/2 p-2"></div>
 
         <div className="w-1/2 p-2">
           <div className="relative">
@@ -367,7 +429,7 @@ export const MedicamentForm = ({
             <Input
               type="number"
               disabled
-              value={totalPrice?.toFixed(2)}
+              value={price?.toFixed(2)}
               prepend="€"
             />
           </div>
@@ -379,7 +441,7 @@ export const MedicamentForm = ({
 
         <div className="w-full p-2">
           <Button.Primary type="submit" disabled={submitting}>
-            Pridėti vaistą
+            {createsNewMedicament ? 'Pridėti vaistą' : 'Atnaujinti vaistą'}
           </Button.Primary>
         </div>
       </div>

@@ -1,16 +1,23 @@
+import { Link } from 'react-router-dom';
 import { MedicamentDTO } from 'swagger/models';
 
 interface MedicamentListProps {
   medicaments: MedicamentDTO[];
   error: string;
   loading: boolean;
+  onDelete: (medicamentId: number) => void;
 }
 
 export const MedicamentList = ({
   medicaments,
   error,
   loading,
+  onDelete,
 }: MedicamentListProps): JSX.Element => {
+  const handleDelete = (pharmacyId: number | undefined): void => {
+    if (pharmacyId) onDelete(pharmacyId);
+  };
+
   if (error) {
     return (
       <div className="pb-4">
@@ -73,15 +80,16 @@ export const MedicamentList = ({
                 {isPrescriptionRequired ? 'Taip' : ''}
               </td>
               <td className="px-4 py-3 text-right">
-                <button
+                <Link
                   className="mr-4 text-indigo-500 outline-none appearance-none hover:underline hover:text-indigo-600 focus:outline-none"
-                  type="button"
+                  to={`/medicament/${id}`}
                 >
                   Redaguoti
-                </button>
+                </Link>
                 <button
                   className="text-red-500 outline-none appearance-none hover:underline hover:text-red-600 focus:outline-none"
                   type="button"
+                  onClick={() => handleDelete(id)}
                 >
                   Pašalinti
                 </button>
