@@ -19,6 +19,9 @@ import {
 } from '../models/WeekdayModel';
 import { WorkingHours } from '../models/WorkingHoursModel';
 
+const formatMoney = (amount: number): string =>
+  amount.toLocaleString('lt-LT', { style: 'currency', currency: 'EUR' });
+
 const initialWorkingHours: WorkingHours = {
   openTime: '',
   closeTime: '',
@@ -250,7 +253,55 @@ export const PharmacyForm = ({
               />
             </div>
           </div>
-        ) : null}
+        ) : (
+          <>
+            <div className="w-full px-2 pt-4">
+              <h3 className="text-lg font-medium leading-6 text-gray-900">
+                Kasos
+              </h3>
+            </div>
+            <div className="flex flex-col w-full p-2">
+              <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+                  <div className="overflow-hidden border-b border-gray-200 shadow sm:rounded-lg">
+                    <table className="min-w-full divide-y divide-gray-200 table-fixed">
+                      <thead className="bg-gray-50">
+                        <tr>
+                          <th
+                            scope="col"
+                            className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase"
+                          >
+                            Kasos nr.
+                          </th>
+                          <th
+                            scope="col"
+                            className="px-6 py-3 text-xs font-medium tracking-wider text-right text-gray-500 uppercase"
+                          >
+                            Grynieji pinigai
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody className="bg-white divide-y divide-gray-200">
+                        {(pharmacy?.registers ?? []).map((register) => {
+                          return (
+                            <tr key={register.id}>
+                              <td className="px-6 py-4 whitespace-nowrap">
+                                #{register.id}
+                              </td>
+                              <td className="px-6 py-4 text-right whitespace-nowrap">
+                                {formatMoney(register.cash ?? 0)}
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </>
+        )}
 
         <div className="w-full px-2 py-4">
           <h3 className="text-lg font-medium leading-6 text-gray-900">
