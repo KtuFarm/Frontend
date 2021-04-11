@@ -289,6 +289,51 @@ export interface paths {
       };
     };
   };
+  '/api/v1/Pharmacies/{id}/transactions': {
+    get: {
+      parameters: {
+        path: {
+          id: number;
+        };
+        header: {
+          /** Api Request header */
+          'X-Api-Request': string;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            'text/plain': components['schemas']['GetTransactionsDTO'];
+            'application/json': components['schemas']['GetTransactionsDTO'];
+            'text/json': components['schemas']['GetTransactionsDTO'];
+          };
+        };
+      };
+    };
+  };
+  '/api/v1/Transactions': {
+    post: {
+      parameters: {
+        header: {
+          /** Api Request header */
+          'X-Api-Request': string;
+        };
+      };
+      responses: {
+        /** Success */
+        200: unknown;
+      };
+      requestBody: {
+        content: {
+          'application/json-patch+json': components['schemas']['CreateTransactionDTO'];
+          'application/json': components['schemas']['CreateTransactionDTO'];
+          'text/json': components['schemas']['CreateTransactionDTO'];
+          'application/*+json': components['schemas']['CreateTransactionDTO'];
+        };
+      };
+    };
+  };
   '/api/v1/Users': {
     get: {
       parameters: {
@@ -415,6 +460,12 @@ export interface components {
       registersCount?: number;
       workingHours?: components['schemas']['WorkingHoursDTO'][] | null;
     };
+    CreateTransactionDTO: {
+      products?: components['schemas']['TransactionProductDTO'][] | null;
+      pharmacyId?: number;
+      registerId?: number;
+      paymentTypeId?: number;
+    };
     CreateUserDTO: {
       name?: string | null;
       surname?: string | null;
@@ -469,6 +520,10 @@ export interface components {
       meta?: components['schemas']['Meta'];
       data?: components['schemas']['ProductBalanceDTO'][] | null;
     };
+    GetTransactionsDTO: {
+      meta?: components['schemas']['Meta'];
+      data?: components['schemas']['TransactionDTO'][] | null;
+    };
     MedicamentDTO: {
       id?: number;
       name?: string | null;
@@ -499,7 +554,7 @@ export interface components {
       meta?: components['schemas']['Meta'];
       data?: components['schemas']['MessageData'];
     };
-    Meta: { [key: string]: unknown };
+    Meta: { [key: string]: any };
     PharmacyDTO: {
       pharmacyNo?: number;
       address?: string | null;
@@ -522,6 +577,14 @@ export interface components {
     RegisterDTO: {
       id?: number;
       cash?: number;
+    };
+    TransactionDTO: {
+      createdAt?: string | null;
+      totalPrice?: number;
+    };
+    TransactionProductDTO: {
+      productBalanceId?: number;
+      amount?: number;
     };
     UserDTO: {
       id?: number;

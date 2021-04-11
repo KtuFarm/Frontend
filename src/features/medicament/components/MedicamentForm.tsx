@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import {
   CreateMedicamentDTO,
   EditMedicamentDTO,
+  EnumDTO,
   MedicamentFullDTO,
-  PharmaceuticalFormDTO,
 } from 'swagger/models';
 
 import { Button } from 'components/Button';
@@ -16,7 +16,7 @@ import { calculateReimbursedPrice } from '../utils/calculateReimbursedPrice';
 import { calculateTotalPrice } from '../utils/calculateTotalPrice';
 
 interface MedicamentFormProps {
-  pharmaceuticalForms: PharmaceuticalFormDTO[];
+  pharmaceuticalForms: EnumDTO[];
   loading: boolean;
   error: string;
   submitting: boolean;

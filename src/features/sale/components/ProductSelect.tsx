@@ -1,28 +1,34 @@
 import { useCallback, useEffect, useState } from 'react';
 import useAutocomplete from '@material-ui/lab/useAutocomplete';
-import { getMedicaments } from 'features/medicament/services/MedicamentService';
+import { getPharmacyProducts } from 'features/pharmacy/services/PharmacyService';
 import debounce from 'lodash.debounce';
-import { GetMedicamentsDTO, MedicamentDTO } from 'swagger/models';
+import {
+  GetProductBalancesDTO,
+  MedicamentDTO,
+  ProductBalanceDTO,
+} from 'swagger/models';
 
-interface MedicamentSelectProps {
+interface ProductSelectProps {
   onSelect?: (value: MedicamentDTO) => void;
 }
 
-export const MedicamentSelect = ({
+export const ProductSelect = ({
   onSelect,
-}: MedicamentSelectProps): JSX.Element => {
+}: ProductSelectProps): JSX.Element => {
   const [inputValue, setInputValue] = useState('');
-  const [highlighted, setHighlighted] = useState<MedicamentDTO | null>(null);
-  const [medicaments, setMedicaments] = useState<MedicamentDTO[]>([]);
+  const [highlighted, setHighlighted] = useState<ProductBalanceDTO | null>(
+    null
+  );
+  const [products, setProducts] = useState<ProductBalanceDTO[]>([]);
   // const [loading, setLoading] = useState(false);
   // const [error, setError] = useState('');
 
-  const fetchMedicaments = useCallback(async (): Promise<void> => {
+  const fetchProducts = useCallback(async (): Promise<void> => {
     // setLoading(true);
     try {
-      const response = await getMedicaments();
-      const data: GetMedicamentsDTO = await response.json();
-      setMedicaments(data.data as MedicamentDTO[]);
+      const response = await getPharmacyProducts(1);
+      const data: GetProductBalancesDTO = await response.json();
+      setProducts(data.data as ProductBalanceDTO[]);
     } catch (error) {
       // setError(error?.message ?? '');
     } finally {
@@ -31,18 +37,18 @@ export const MedicamentSelect = ({
   }, []);
 
   useEffect(() => {
-    const debouncedFetchMedicaments = debounce(fetchMedicaments, 300);
+    const debouncedFetchProducts = debounce(fetchProducts, 300);
 
     if (inputValue.length > 2) {
-      debouncedFetchMedicaments();
+      debouncedFetchProducts();
     } else {
-      setMedicaments([]);
+      setProducts([]);
     }
 
     return () => {
-      debouncedFetchMedicaments.cancel();
+      debouncedFetchProducts.cancel();
     };
-  }, [fetchMedicaments, inputValue]);
+  }, [fetchProducts, inputValue]);
 
   const {
     getRootProps,
@@ -53,12 +59,12 @@ export const MedicamentSelect = ({
     groupedOptions,
   } = useAutocomplete({
     id: 'medicament-select',
-    options: medicaments,
+    options: products,
     clearOnBlur: true,
     value: null,
     inputValue,
     openOnFocus: false,
-    getOptionLabel: (option) => option.name ?? '',
+    getOptionLabel: (option) => option.medicamentName ?? '',
     getOptionSelected: (option, value) => option.id === value.id,
     onHighlightChange: (_event, option) => setHighlighted(option),
     onChange: (_event, value) => {
@@ -110,7 +116,7 @@ export const MedicamentSelect = ({
                 >
                   <div className="flex items-center">
                     <span className="block font-normal truncate">
-                      {option.name}
+                      {option.medicamentName}
                     </span>
                   </div>
                 </li>

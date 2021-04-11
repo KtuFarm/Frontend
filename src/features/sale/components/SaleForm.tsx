@@ -1,29 +1,66 @@
-import React, { useState } from 'react';
-import { MedicamentDTO } from 'swagger/models';
+import React, { useEffect, useState } from 'react';
+import {
+  CreateTransactionDTO,
+  EnumDTO,
+  MedicamentDTO,
+  ProductBalanceDTO,
+} from 'swagger/models';
 
 import { Button } from 'components/Button';
+import { Label } from 'components/Label';
+import { Select } from 'components/Select';
 
-import { MedicamentSelect } from './MedicamentSelect';
+import { paymentTypeTranslation } from '../models/PaymentTypes';
+
+import { ProductSelect } from './ProductSelect';
 
 interface SaleItem {
-  medicament: MedicamentDTO;
+  product: ProductBalanceDTO;
   amount: number;
 }
 
 const formatMoney = (amount: number): string =>
   amount.toLocaleString('lt-LT', { style: 'currency', currency: 'EUR' });
 
-export const SaleForm = (): JSX.Element => {
+interface SaleFormProps {
+  paymentTypes: EnumDTO[];
+  loading: boolean;
+  error: string;
+  submitting: boolean;
+  onSubmit: (transaction: CreateTransactionDTO) => unknown;
+  onClearError: () => unknown;
+}
+
+export const SaleForm = ({
+  paymentTypes,
+  submitting,
+  error,
+  loading,
+  onClearError,
+  onSubmit,
+}: SaleFormProps): JSX.Element => {
   const [saleItems, setSaleItems] = useState<SaleItem[]>([]);
+  const [paymentTypeId, setPaymentTypeId] = useState(1);
+
+  useEffect(() => {
+    onClearError();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [saleItems, paymentTypeId]);
+
+  const handleChangePaymentType = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ): void => {
+    setPaymentTypeId(Number(event.target.value));
+  };
 
   const handleAdd = (medicament: MedicamentDTO): void => {
-    setSaleItems([...saleItems, { medicament, amount: 1 }]);
+    setSaleItems([...saleItems, { product: medicament, amount: 1 }]);
   };
 
   const handleRemove = (id: number | undefined): void => {
     if (id === undefined) return;
 
-    setSaleItems(saleItems.filter((item) => item.medicament.id !== id));
+    setSaleItems(saleItems.filter((item) => item.product.id !== id));
   };
 
   const handleChangeAmount = (
@@ -37,17 +74,60 @@ export const SaleForm = (): JSX.Element => {
     if (Number.isNaN(newAmount)) return;
 
     const newSaleItems = [...saleItems];
-    const index = newSaleItems.findIndex((item) => item.medicament.id === id);
+    const index = newSaleItems.findIndex((item) => item.product.id === id);
     newSaleItems[index].amount = newAmount;
 
     setSaleItems(newSaleItems);
   };
 
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
+    event.preventDefault();
+
+    const products = saleItems.map((item) => ({
+      amount: item.amount,
+      productBalanceId: item.product.id,
+    }));
+
+    const transaction: CreateTransactionDTO = {
+      products,
+      pharmacyId: 1,
+      registerId: 130,
+      paymentTypeId,
+    };
+
+    onSubmit(transaction);
+  };
+
+  if (loading) {
+    return <p>Kraunama...</p>;
+  }
+
   return (
-    <form className="md:w-2/3">
+    <form className="md:w-2/3" onSubmit={handleSubmit}>
       <div className="flex flex-wrap -m-2">
         <div className="w-full p-2">
-          <MedicamentSelect onSelect={handleAdd} />
+          <div className="relative">
+            <Label htmlFor="paymentType">Mokėjimo būdas</Label>
+            <Select
+              id="paymentType"
+              name="paymentType"
+              value={paymentTypeId}
+              onChange={handleChangePaymentType}
+            >
+              {paymentTypes.map((type) => {
+                const typeName = paymentTypeTranslation[type.name ?? ''];
+                return (
+                  <option key={type.id} value={type.id}>
+                    {typeName}
+                  </option>
+                );
+              })}
+            </Select>
+          </div>
+        </div>
+
+        <div className="w-full p-2">
+          <ProductSelect onSelect={handleAdd} />
         </div>
 
         <div className="flex flex-col w-full p-2">
@@ -88,18 +168,22 @@ export const SaleForm = (): JSX.Element => {
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
                     {saleItems.map((saleItem) => {
-                      const price = saleItem.medicament.price ?? 0;
+                      const price = saleItem.product.price ?? 0;
                       const totalPrice = price * saleItem.amount;
                       return (
-                        <tr key={saleItem.medicament.id}>
+                        <tr key={saleItem.product.id}>
                           <td className="px-6 py-4 whitespace-nowrap">
                             <div className="flex items-center">
                               <div>
                                 <div className="text-sm font-medium text-gray-900">
-                                  {saleItem.medicament.name}
+                                  {saleItem.product.medicamentName}
                                 </div>
                                 <div className="text-sm text-gray-500">
-                                  {saleItem.medicament.activeSubstance}
+                                  {
+                                    (
+                                      saleItem.product.expirationDate ?? ''
+                                    ).split('T')[0]
+                                  }
                                 </div>
                               </div>
                             </div>
@@ -111,24 +195,10 @@ export const SaleForm = (): JSX.Element => {
                                 className="flex-1 block w-0 border-gray-300 rounded-md disabled:cursor-not-allowed disabled:bg-gray-100 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                                 value={saleItem.amount}
                                 onChange={(event) =>
-                                  handleChangeAmount(
-                                    event,
-                                    saleItem.medicament.id
-                                  )
+                                  handleChangeAmount(event, saleItem.product.id)
                                 }
                               />
                             </div>
-                            {/* <Input
-                              type="text"
-                              value={saleItem.amount}
-                              onChange={(event) =>
-                                handleChangeAmount(
-                                  event,
-                                  saleItem.medicament.id
-                                )
-                              }
-                              style={{ width: 30 }}
-                            /> */}
                           </td>
                           <td className="px-6 py-4 text-right text-gray-900 whitespace-nowrap">
                             {formatMoney(price)}
@@ -139,9 +209,7 @@ export const SaleForm = (): JSX.Element => {
                           <td className="px-6 py-4 text-sm font-medium text-right whitespace-nowrap">
                             <button
                               className="text-red-600 outline-none hover:text-red-900 focus:outline-none"
-                              onClick={() =>
-                                handleRemove(saleItem.medicament.id)
-                              }
+                              onClick={() => handleRemove(saleItem.product.id)}
                             >
                               Pašalinti
                             </button>
@@ -156,8 +224,14 @@ export const SaleForm = (): JSX.Element => {
           </div>
         </div>
 
+        {error != null && error !== '' ? (
+          <p className="mx-2 text-red-700">{error}</p>
+        ) : null}
+
         <div className="w-full p-2">
-          <Button.Primary type="submit">Užbaigti pardavimą</Button.Primary>
+          <Button.Primary type="submit" disabled={submitting}>
+            Užbaigti pardavimą
+          </Button.Primary>
         </div>
       </div>
     </form>

@@ -43,3 +43,11 @@ export const removePharmacy = async (
     headers: DEFAULT_HEADERS,
   });
 };
+
+export const getPharmacyProducts = async (
+  id: number | string
+): Promise<Response> => {
+  return fetch(`${API_HOST}/api/v1/Pharmacies/${id}/products`, {
+    headers: DEFAULT_HEADERS,
+  });
+};
