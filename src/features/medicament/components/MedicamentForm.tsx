@@ -69,13 +69,16 @@ export const MedicamentForm = ({
     setCountry(medicament?.country ?? '');
     setBarCode(medicament?.barCode ?? '');
     setIsPrescriptionRequired(medicament?.isPrescriptionRequired ?? false);
-    setBasePrice(medicament?.priceWithoutReimburse ?? undefined);
+    setBasePrice(medicament?.basePrice ?? undefined);
     setIsReimbursed(medicament?.isReimbursed ?? false);
     setReimbursePercentage(
       medicament?.reimbursePercentage !== undefined &&
         medicament?.reimbursePercentage !== null
-        ? medicament?.reimbursePercentage * 100
+        ? medicament?.reimbursePercentage
         : undefined
+    );
+    setSurcharge(
+      medicament?.surcharge !== undefined ? medicament?.surcharge : 0
     );
   }, [medicament, pharmaceuticalForms]);
 
@@ -168,17 +171,17 @@ export const MedicamentForm = ({
     onSubmit(medicamentDto);
   };
 
-  const reimbursedPrice =
-    basePrice !== undefined && reimbursePercentage !== undefined
-      ? calculateReimbursedPrice(basePrice, reimbursePercentage)
-      : undefined;
-
-  const price = isReimbursed ? reimbursedPrice : basePrice;
-
   const totalPrice =
-    price !== undefined && surcharge !== undefined
-      ? calculateTotalPrice(price, surcharge)
+    basePrice !== undefined && surcharge !== undefined
+      ? calculateTotalPrice(basePrice, surcharge)
       : undefined;
+
+  const reimbursedPrice =
+    totalPrice !== undefined && reimbursePercentage !== undefined
+      ? calculateReimbursedPrice(totalPrice, reimbursePercentage)
+      : undefined;
+
+  const price = isReimbursed ? reimbursedPrice : totalPrice;
 
   if (loading) {
     return <p>Kraunama...</p>;
@@ -361,6 +364,35 @@ export const MedicamentForm = ({
 
         <div className="w-1/2 p-2">
           <div className="relative">
+            <Label htmlFor="surcharge">Antkainis</Label>
+            <Input
+              type="number"
+              name="surcharge"
+              id="surcharge"
+              min="0"
+              max="100"
+              step="1"
+              prepend="%"
+              value={surcharge}
+              onChange={handleChangeSurcharge}
+            />
+          </div>
+        </div>
+
+        <div className="w-1/2 p-2">
+          <div className="relative">
+            <Label>Kaina su antkainiu</Label>
+            <Input
+              type="number"
+              disabled
+              value={totalPrice?.toFixed(2)}
+              prepend="€"
+            />
+          </div>
+        </div>
+
+        <div className="w-1/2 p-2">
+          <div className="relative">
             <Label htmlFor="reimbursePercentage">Kompensacija</Label>
             <Input
               type="number"
@@ -389,22 +421,7 @@ export const MedicamentForm = ({
           </div>
         </div>
 
-        <div className="w-1/2 p-2">
-          <div className="relative">
-            <Label htmlFor="surcharge">Antkainis</Label>
-            <Input
-              type="number"
-              name="surcharge"
-              id="surcharge"
-              min="0"
-              max="100"
-              step="1"
-              prepend="%"
-              value={surcharge}
-              onChange={handleChangeSurcharge}
-            />
-          </div>
-        </div>
+        <div className="w-1/2 p-2"></div>
 
         <div className="w-1/2 p-2">
           <div className="relative">
@@ -412,7 +429,7 @@ export const MedicamentForm = ({
             <Input
               type="number"
               disabled
-              value={totalPrice?.toFixed(2)}
+              value={price?.toFixed(2)}
               prepend="€"
             />
           </div>

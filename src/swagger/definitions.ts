@@ -105,6 +105,26 @@ export interface paths {
       };
     };
   };
+  '/api/v1/PaymentTypes': {
+    get: {
+      parameters: {
+        header: {
+          /** Api Request header */
+          'X-Api-Request': string;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            'text/plain': components['schemas']['GetEnumerableDTO'];
+            'application/json': components['schemas']['GetEnumerableDTO'];
+            'text/json': components['schemas']['GetEnumerableDTO'];
+          };
+        };
+      };
+    };
+  };
   '/api/v1/PharmaceuticalForms': {
     get: {
       parameters: {
@@ -243,6 +263,29 @@ export interface paths {
       responses: {
         /** Success */
         200: unknown;
+      };
+    };
+  };
+  '/api/v1/Pharmacies/{id}/products': {
+    get: {
+      parameters: {
+        path: {
+          id: number;
+        };
+        header: {
+          /** Api Request header */
+          'X-Api-Request': string;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            'text/plain': components['schemas']['GetProductBalancesDTO'];
+            'application/json': components['schemas']['GetProductBalancesDTO'];
+            'text/json': components['schemas']['GetProductBalancesDTO'];
+          };
+        };
       };
     };
   };
@@ -422,6 +465,10 @@ export interface components {
       meta?: components['schemas']['Meta'];
       data?: components['schemas']['PharmacyDTO'][] | null;
     };
+    GetProductBalancesDTO: {
+      meta?: components['schemas']['Meta'];
+      data?: components['schemas']['ProductBalanceDTO'][] | null;
+    };
     MedicamentDTO: {
       id?: number;
       name?: string | null;
@@ -435,8 +482,9 @@ export interface components {
       manufacturer?: string | null;
       pharmaceuticalForm?: string | null;
       isReimbursed?: boolean;
-      reimbursePercentage?: number | null;
-      priceWithoutReimburse?: number | null;
+      reimbursePercentage?: number;
+      basePrice?: number;
+      surcharge?: number;
       id?: number;
       name?: string | null;
       activeSubstance?: string | null;
@@ -463,6 +511,13 @@ export interface components {
       pharmacyNo?: number;
       address?: string | null;
       city?: string | null;
+    };
+    ProductBalanceDTO: {
+      id?: number;
+      medicamentName?: string | null;
+      price?: number;
+      amount?: number;
+      expirationDate?: string | null;
     };
     RegisterDTO: {
       id?: number;
