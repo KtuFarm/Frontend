@@ -1,39 +1,48 @@
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import useAutocomplete from '@material-ui/lab/useAutocomplete';
-
-interface Language {
-  name: string;
-  year: number;
-}
-
-const languages = [
-  {
-    name: 'C',
-    year: 1972,
-  },
-  {
-    name: 'C++',
-    year: 1972,
-  },
-  {
-    name: 'C#',
-    year: 1972,
-  },
-  {
-    name: 'Elm',
-    year: 2012,
-  },
-];
+import { getMedicaments } from 'features/medicament/services/MedicamentService';
+import debounce from 'lodash.debounce';
+import { GetMedicamentsDTO, MedicamentDTO } from 'swagger/models';
 
 interface MedicamentSelectProps {
-  onSelect?: (value: Language) => void;
+  onSelect?: (value: MedicamentDTO) => void;
 }
 
 export const MedicamentSelect = ({
   onSelect,
 }: MedicamentSelectProps): JSX.Element => {
   const [inputValue, setInputValue] = useState('');
-  const [highlighted, setHighlighted] = useState<Language | null>(null);
+  const [highlighted, setHighlighted] = useState<MedicamentDTO | null>(null);
+  const [medicaments, setMedicaments] = useState<MedicamentDTO[]>([]);
+  // const [loading, setLoading] = useState(false);
+  // const [error, setError] = useState('');
+
+  const fetchMedicaments = useCallback(async (): Promise<void> => {
+    // setLoading(true);
+    try {
+      const response = await getMedicaments();
+      const data: GetMedicamentsDTO = await response.json();
+      setMedicaments(data.data as MedicamentDTO[]);
+    } catch (error) {
+      // setError(error?.message ?? '');
+    } finally {
+      // setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    const debouncedFetchMedicaments = debounce(fetchMedicaments, 300);
+
+    if (inputValue.length > 2) {
+      debouncedFetchMedicaments();
+    } else {
+      setMedicaments([]);
+    }
+
+    return () => {
+      debouncedFetchMedicaments.cancel();
+    };
+  }, [fetchMedicaments, inputValue]);
 
   const {
     getRootProps,
@@ -44,16 +53,20 @@ export const MedicamentSelect = ({
     groupedOptions,
   } = useAutocomplete({
     id: 'medicament-select',
-    options: languages,
+    options: medicaments,
     clearOnBlur: true,
     value: null,
     inputValue,
-    getOptionLabel: (option) => option.name,
-    getOptionSelected: (option, value) => option.name === value.name,
+    openOnFocus: false,
+    getOptionLabel: (option) => option.name ?? '',
+    getOptionSelected: (option, value) => option.id === value.id,
     onHighlightChange: (_event, option) => setHighlighted(option),
     onChange: (_event, value) => {
       setInputValue('');
       if (value) onSelect?.(value);
+    },
+    onInputChange: (_event, value) => {
+      setInputValue(value);
     },
   });
 
@@ -64,7 +77,7 @@ export const MedicamentSelect = ({
         className="block text-sm font-medium text-gray-700"
         {...getInputLabelProps()}
       >
-        Assigned to
+        Vaisto paieška
       </label>
       <div className="relative mt-1">
         <input
@@ -75,7 +88,7 @@ export const MedicamentSelect = ({
 
         {groupedOptions.length > 0 ? (
           <ul
-            className="absolute z-10 w-full py-1 mt-1 overflow-auto text-base bg-white rounded-md shadow-lg max-h-56 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
+            className="absolute z-20 w-full py-1 mt-1 overflow-auto text-base bg-white rounded-md shadow-lg max-h-56 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
             tabIndex={-1}
             role="listbox"
             aria-labelledby="listbox-label"
@@ -83,7 +96,7 @@ export const MedicamentSelect = ({
             {...getListboxProps()}
           >
             {groupedOptions.map((option, index) => {
-              const isHighlighted = highlighted?.name === option.name;
+              const isHighlighted = highlighted?.id === option.id;
 
               return (
                 <li
