@@ -40,7 +40,7 @@ export const Sales = (): JSX.Element => {
           </h1>
 
           <Link to="new" className="sm:ml-2">
-            <Button.Primary>Pardavimas</Button.Primary>
+            <Button.Primary>Naujas pardavimas</Button.Primary>
           </Link>
         </div>
         <TransactionList
