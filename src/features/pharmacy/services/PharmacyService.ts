@@ -51,3 +51,11 @@ export const getPharmacyProducts = async (
     headers: DEFAULT_HEADERS,
   });
 };
+
+export const getPharmacyTransactions = async (
+  id: number | string
+): Promise<Response> => {
+  return fetch(`${API_HOST}/api/v1/Pharmacies/${id}/transactions`, {
+    headers: DEFAULT_HEADERS,
+  });
+};

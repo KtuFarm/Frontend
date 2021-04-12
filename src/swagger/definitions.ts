@@ -554,7 +554,7 @@ export interface components {
       meta?: components['schemas']['Meta'];
       data?: components['schemas']['MessageData'];
     };
-    Meta: { [key: string]: any };
+    Meta: { [key: string]: unknown };
     PharmacyDTO: {
       pharmacyNo?: number;
       address?: string | null;
