@@ -17,6 +17,9 @@ export const Header = (): JSX.Element => {
           <Link to="/pharmacy" className="mr-5 hover:text-gray-900">
             Vaistinės
           </Link>
+          <Link to="/sale" className="mr-5 hover:text-gray-900">
+            Transakcijos
+          </Link>
         </nav>
         <Link
           to="/login"
