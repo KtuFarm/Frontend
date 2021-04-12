@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import {
   CreateMedicamentDTO,
   EditMedicamentDTO,
-  PharmaceuticalFormDTO,
+  EnumDTO,
 } from 'swagger/models';
 
 import { Layout } from 'components/Layout';
@@ -19,9 +19,7 @@ export const CreateMedicament = (): JSX.Element => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
-  const [pharmaceuticalForms, setPharmaceuticalForms] = useState<
-    PharmaceuticalFormDTO[]
-  >([]);
+  const [pharmaceuticalForms, setPharmaceuticalForms] = useState<EnumDTO[]>([]);
 
   useEffect(() => {
     const fetchPharmaceuticalForms = async (): Promise<void> => {
@@ -29,7 +27,7 @@ export const CreateMedicament = (): JSX.Element => {
       try {
         const response = await getPharmaceuticalForms();
         const data = await response.json();
-        setPharmaceuticalForms(data?.data as PharmaceuticalFormDTO[]);
+        setPharmaceuticalForms(data?.data as EnumDTO[]);
       } catch (error) {
         setError(error?.message ?? '');
       } finally {
@@ -60,6 +58,7 @@ export const CreateMedicament = (): JSX.Element => {
       setSubmitting(false);
     }
   };
+
   return (
     <Layout title="Pridėti vaistą">
       <MedicamentForm

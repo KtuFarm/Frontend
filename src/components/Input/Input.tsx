@@ -22,7 +22,7 @@ export const Input = ({
       <input
         className={`z-10 flex-1 block w-full border-gray-300 rounded-md disabled:cursor-not-allowed disabled:bg-gray-100 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm ${
           hasAppend ? 'rounded-l-none' : ''
-        } ${hasPrepend ? 'rounded-r-none' : ''} ${className}`}
+        } ${hasPrepend ? 'rounded-r-none' : ''} ${className ?? ''}`}
         {...props}
       />
       {hasPrepend ? (

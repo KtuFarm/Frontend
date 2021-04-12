@@ -1,10 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import {
-  EditMedicamentDTO,
-  MedicamentFullDTO,
-  PharmaceuticalFormDTO,
-} from 'swagger/models';
+import { EditMedicamentDTO, EnumDTO, MedicamentFullDTO } from 'swagger/models';
 
 import { Layout } from 'components/Layout';
 
@@ -21,9 +17,7 @@ export const EditMedicament = (): JSX.Element => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
-  const [pharmaceuticalForms, setPharmaceuticalForms] = useState<
-    PharmaceuticalFormDTO[]
-  >([]);
+  const [pharmaceuticalForms, setPharmaceuticalForms] = useState<EnumDTO[]>([]);
   const [medicament, setMedicament] = useState<MedicamentFullDTO | null>(null);
 
   const medicamentId = params?.id ?? '';
@@ -51,7 +45,7 @@ export const EditMedicament = (): JSX.Element => {
       try {
         const response = await getPharmaceuticalForms();
         const data = await response.json();
-        setPharmaceuticalForms(data?.data as PharmaceuticalFormDTO[]);
+        setPharmaceuticalForms(data?.data as EnumDTO[]);
       } catch (error) {
         setError(error?.message ?? '');
       } finally {

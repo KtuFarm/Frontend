@@ -7,6 +7,7 @@ import {
   Medicaments,
 } from 'features/medicament';
 import { CreatePharmacy, EditPharmacy, Pharmacies } from 'features/pharmacy';
+import { CreateSale } from 'features/sale';
 
 export const App = (): JSX.Element => {
   return (
@@ -19,6 +20,7 @@ export const App = (): JSX.Element => {
       <Route path="/medicament" element={<Medicaments />} />
       <Route path="/medicament/new" element={<CreateMedicament />} />
       <Route path="/medicament/:id" element={<EditMedicament />} />
+      <Route path="/sale/new" element={<CreateSale />} />
     </Routes>
   );
 };
