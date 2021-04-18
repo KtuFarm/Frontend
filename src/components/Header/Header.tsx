@@ -1,6 +1,20 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 export const Header = (): JSX.Element => {
+  const navigate = useNavigate();
+
+  const handleOpenMedicaments = (): void => {
+    navigate('/medicament');
+  };
+
+  const handleOpenPharmacies = (): void => {
+    navigate('/pharmacy');
+  };
+
+  const handleOpenSales = (): void => {
+    navigate('/sale');
+  };
+
   return (
     <header className="text-gray-600 bg-white shadow body-font">
       <div className="container flex flex-col flex-wrap items-center p-5 mx-auto md:flex-row">
@@ -11,15 +25,24 @@ export const Header = (): JSX.Element => {
           <span className="ml-3 text-xl">Vaistukai</span>
         </Link>
         <nav className="flex flex-wrap items-center justify-center text-base md:ml-auto">
-          <Link to="/medicament" className="mr-5 hover:text-gray-900">
+          <button
+            onClick={handleOpenMedicaments}
+            className="mr-5 hover:text-gray-900"
+          >
             Vaistai
-          </Link>
-          <Link to="/pharmacy" className="mr-5 hover:text-gray-900">
+          </button>
+          <button
+            onClick={handleOpenPharmacies}
+            className="mr-5 hover:text-gray-900"
+          >
             Vaistinės
-          </Link>
-          <Link to="/sale" className="mr-5 hover:text-gray-900">
+          </button>
+          <button
+            onClick={handleOpenSales}
+            className="mr-5 hover:text-gray-900"
+          >
             Pardavimai
-          </Link>
+          </button>
         </nav>
         <Link
           to="/login"
