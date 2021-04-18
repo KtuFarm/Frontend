@@ -38,7 +38,7 @@ export const Medicaments = (): JSX.Element => {
     fetchMedicaments();
   }, []);
 
-  const handleCreatePharmacy = (): void => {
+  const handleCreateMedicament = (): void => {
     navigate('new');
   };
 
@@ -76,7 +76,7 @@ export const Medicaments = (): JSX.Element => {
             Vaistai
           </h1>
 
-          <Button.Primary className="sm:ml-2" onClick={handleCreatePharmacy}>
+          <Button.Primary className="sm:ml-2" onClick={handleCreateMedicament}>
             Pridėti vaistą
           </Button.Primary>
         </div>
