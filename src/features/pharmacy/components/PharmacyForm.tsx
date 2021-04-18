@@ -371,7 +371,7 @@ export const PharmacyForm = ({
 
         <div className="w-full p-2">
           <Button.Primary type="submit" disabled={submitting}>
-            Pridėti vaistinę
+            {createsNewPharmacy ? 'Pridėti vaistinę' : 'Atnaujinti vaistinę'}
           </Button.Primary>
         </div>
       </div>
