@@ -1,9 +1,7 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import { getPharmacyTransactions } from 'features/pharmacy/services/PharmacyService';
 import { GetTransactionsDTO, TransactionDTO } from 'swagger/models';
 
-import { Button } from 'components/Button';
 import { Container } from 'components/Container';
 import { Content } from 'components/Content';
 
@@ -38,10 +36,6 @@ export const Sales = (): JSX.Element => {
           <h1 className="text-2xl font-medium text-gray-900 sm:text-3xl title-font">
             Transakcijos
           </h1>
-
-          <Link to="new" className="sm:ml-2">
-            <Button.Primary>Naujas pardavimas</Button.Primary>
-          </Link>
         </div>
         <TransactionList
           transactions={transactions}
