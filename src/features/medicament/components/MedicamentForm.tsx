@@ -160,11 +160,9 @@ export const MedicamentForm = ({
       isReimbursed,
       country,
       basePrice,
-      surcharge: surcharge !== undefined ? surcharge / 100 : undefined,
+      surcharge: surcharge !== undefined ? surcharge : undefined,
       reimbursePercentage:
-        reimbursePercentage !== undefined
-          ? reimbursePercentage / 100
-          : undefined,
+        reimbursePercentage !== undefined ? reimbursePercentage : undefined,
       pharmaceuticalFormId,
     };
 
@@ -237,6 +235,9 @@ export const MedicamentForm = ({
               onChange={handleChangePharmaceuticalForm}
               disabled={!createsNewMedicament}
             >
+              <option value={-1} disabled>
+                Pasirinkite vaisto formą
+              </option>
               {pharmaceuticalForms.map((form) => {
                 const formName = pharmaceuticalFormTranslation[form.name ?? ''];
                 return (
@@ -371,7 +372,6 @@ export const MedicamentForm = ({
               id="surcharge"
               min="0"
               max="100"
-              step="1"
               prepend="%"
               value={surcharge}
               onChange={handleChangeSurcharge}
@@ -400,7 +400,6 @@ export const MedicamentForm = ({
               id="reimbursePercentage"
               min="0"
               max="100"
-              step="1"
               disabled={!isReimbursed}
               prepend="%"
               value={reimbursePercentage}
