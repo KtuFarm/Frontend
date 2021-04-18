@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { MedicamentDTO } from 'swagger/models';
 
 interface MedicamentListProps {
@@ -14,8 +14,14 @@ export const MedicamentList = ({
   loading,
   onDelete,
 }: MedicamentListProps): JSX.Element => {
-  const handleDelete = (pharmacyId: number | undefined): void => {
-    if (pharmacyId) onDelete(pharmacyId);
+  const navigate = useNavigate();
+
+  const handleDelete = (medicamentId: number | undefined): void => {
+    if (medicamentId) onDelete(medicamentId);
+  };
+
+  const handleEditMedicament = (medicamentId: number | undefined): void => {
+    if (medicamentId) navigate(`/medicament/${medicamentId}`);
   };
 
   if (error) {
@@ -80,12 +86,12 @@ export const MedicamentList = ({
                 {isPrescriptionRequired ? 'Taip' : ''}
               </td>
               <td className="px-4 py-3 text-right">
-                <Link
+                <button
                   className="mr-4 text-indigo-500 outline-none appearance-none hover:underline hover:text-indigo-600 focus:outline-none"
-                  to={`/medicament/${id}`}
+                  onClick={() => handleEditMedicament(id)}
                 >
                   Redaguoti
-                </Link>
+                </button>
                 <button
                   className="text-red-500 outline-none appearance-none hover:underline hover:text-red-600 focus:outline-none"
                   type="button"
