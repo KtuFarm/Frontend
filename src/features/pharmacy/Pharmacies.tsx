@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { GetPharmaciesDTO, PharmacyDTO } from 'swagger/models';
 
 import { Button } from 'components/Button';
@@ -12,6 +12,7 @@ import { PharmacyList } from './components/PharmacyList';
 import { getPharmacies, removePharmacy } from './services/PharmacyService';
 
 export const Pharmacies = (): JSX.Element => {
+  const navigate = useNavigate();
   const [error, setError] = useState('');
   const [deleteError, setDeleteError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -36,6 +37,10 @@ export const Pharmacies = (): JSX.Element => {
   useEffect(() => {
     fetchPharmacies();
   }, []);
+
+  const handleCreatePharmacy = (): void => {
+    navigate('new');
+  };
 
   const handleCloseModal = (): void => {
     setDeleteError('');
@@ -72,9 +77,9 @@ export const Pharmacies = (): JSX.Element => {
             Vaistinės
           </h1>
 
-          <Link to="new" className="sm:ml-2">
-            <Button.Primary>Pridėti vaistinę</Button.Primary>
-          </Link>
+          <Button.Primary className="sm:ml-2" onClick={handleCreatePharmacy}>
+            Pridėti vaistinę
+          </Button.Primary>
         </div>
         <PharmacyList
           pharmacies={pharmacies}
