@@ -16,9 +16,9 @@ export interface paths {
         /** Success */
         200: {
           content: {
-            'text/plain': components['schemas']['GetMedicamentsDTO'];
-            'application/json': components['schemas']['GetMedicamentsDTO'];
-            'text/json': components['schemas']['GetMedicamentsDTO'];
+            'text/plain': components['schemas']['MedicamentDTOGetListDTO'];
+            'application/json': components['schemas']['MedicamentDTOGetListDTO'];
+            'text/json': components['schemas']['MedicamentDTOGetListDTO'];
           };
         };
       };
@@ -59,9 +59,9 @@ export interface paths {
         /** Success */
         200: {
           content: {
-            'text/plain': components['schemas']['GetMedicamentDTO'];
-            'application/json': components['schemas']['GetMedicamentDTO'];
-            'text/json': components['schemas']['GetMedicamentDTO'];
+            'text/plain': components['schemas']['MedicamentFullDTOGetObjectDTO'];
+            'application/json': components['schemas']['MedicamentFullDTOGetObjectDTO'];
+            'text/json': components['schemas']['MedicamentFullDTOGetObjectDTO'];
           };
         };
       };
@@ -117,9 +117,9 @@ export interface paths {
         /** Success */
         200: {
           content: {
-            'text/plain': components['schemas']['GetEnumerableDTO'];
-            'application/json': components['schemas']['GetEnumerableDTO'];
-            'text/json': components['schemas']['GetEnumerableDTO'];
+            'text/plain': components['schemas']['EnumDTOGetListDTO'];
+            'application/json': components['schemas']['EnumDTOGetListDTO'];
+            'text/json': components['schemas']['EnumDTOGetListDTO'];
           };
         };
       };
@@ -137,9 +137,9 @@ export interface paths {
         /** Success */
         200: {
           content: {
-            'text/plain': components['schemas']['GetEnumerableDTO'];
-            'application/json': components['schemas']['GetEnumerableDTO'];
-            'text/json': components['schemas']['GetEnumerableDTO'];
+            'text/plain': components['schemas']['EnumDTOGetListDTO'];
+            'application/json': components['schemas']['EnumDTOGetListDTO'];
+            'text/json': components['schemas']['EnumDTOGetListDTO'];
           };
         };
       };
@@ -157,9 +157,9 @@ export interface paths {
         /** Success */
         200: {
           content: {
-            'text/plain': components['schemas']['GetPharmaciesDTO'];
-            'application/json': components['schemas']['GetPharmaciesDTO'];
-            'text/json': components['schemas']['GetPharmaciesDTO'];
+            'text/plain': components['schemas']['PharmacyDTOGetListDTO'];
+            'application/json': components['schemas']['PharmacyDTOGetListDTO'];
+            'text/json': components['schemas']['PharmacyDTOGetListDTO'];
           };
         };
       };
@@ -197,9 +197,9 @@ export interface paths {
         /** Success */
         200: {
           content: {
-            'text/plain': components['schemas']['GetPharmaciesDTO'];
-            'application/json': components['schemas']['GetPharmaciesDTO'];
-            'text/json': components['schemas']['GetPharmaciesDTO'];
+            'text/plain': components['schemas']['PharmacyDTOGetListDTO'];
+            'application/json': components['schemas']['PharmacyDTOGetListDTO'];
+            'text/json': components['schemas']['PharmacyDTOGetListDTO'];
           };
         };
       };
@@ -220,9 +220,9 @@ export interface paths {
         /** Success */
         200: {
           content: {
-            'text/plain': components['schemas']['GetPharmacyDTO'];
-            'application/json': components['schemas']['GetPharmacyDTO'];
-            'text/json': components['schemas']['GetPharmacyDTO'];
+            'text/plain': components['schemas']['PharmacyFullDTOGetObjectDTO'];
+            'application/json': components['schemas']['PharmacyFullDTOGetObjectDTO'];
+            'text/json': components['schemas']['PharmacyFullDTOGetObjectDTO'];
           };
         };
       };
@@ -281,9 +281,9 @@ export interface paths {
         /** Success */
         200: {
           content: {
-            'text/plain': components['schemas']['GetProductBalancesDTO'];
-            'application/json': components['schemas']['GetProductBalancesDTO'];
-            'text/json': components['schemas']['GetProductBalancesDTO'];
+            'text/plain': components['schemas']['ProductBalanceDTOGetListDTO'];
+            'application/json': components['schemas']['ProductBalanceDTOGetListDTO'];
+            'text/json': components['schemas']['ProductBalanceDTOGetListDTO'];
           };
         };
       };
@@ -304,9 +304,9 @@ export interface paths {
         /** Success */
         200: {
           content: {
-            'text/plain': components['schemas']['GetTransactionsDTO'];
-            'application/json': components['schemas']['GetTransactionsDTO'];
-            'text/json': components['schemas']['GetTransactionsDTO'];
+            'text/plain': components['schemas']['TransactionDTOGetListDTO'];
+            'application/json': components['schemas']['TransactionDTOGetListDTO'];
+            'text/json': components['schemas']['TransactionDTOGetListDTO'];
           };
         };
       };
@@ -346,9 +346,9 @@ export interface paths {
         /** Success */
         200: {
           content: {
-            'text/plain': components['schemas']['UserDTO'];
-            'application/json': components['schemas']['UserDTO'];
-            'text/json': components['schemas']['UserDTO'];
+            'text/plain': components['schemas']['UserDTOGetListDTO'];
+            'application/json': components['schemas']['UserDTOGetListDTO'];
+            'text/json': components['schemas']['UserDTOGetListDTO'];
           };
         };
       };
@@ -389,9 +389,9 @@ export interface paths {
         /** Success */
         200: {
           content: {
-            'text/plain': components['schemas']['GetPharmacyDTO'];
-            'application/json': components['schemas']['GetPharmacyDTO'];
-            'text/json': components['schemas']['GetPharmacyDTO'];
+            'text/plain': components['schemas']['UserFullDTOGetObjectDTO'];
+            'application/json': components['schemas']['UserFullDTOGetObjectDTO'];
+            'text/json': components['schemas']['UserFullDTOGetObjectDTO'];
           };
         };
       };
@@ -496,33 +496,9 @@ export interface components {
       id?: number;
       name?: string | null;
     };
-    GetEnumerableDTO: {
+    EnumDTOGetListDTO: {
       meta?: components['schemas']['Meta'];
       data?: components['schemas']['EnumDTO'][] | null;
-    };
-    GetMedicamentDTO: {
-      meta?: components['schemas']['Meta'];
-      data?: components['schemas']['MedicamentFullDTO'];
-    };
-    GetMedicamentsDTO: {
-      meta?: components['schemas']['Meta'];
-      data?: components['schemas']['MedicamentDTO'][] | null;
-    };
-    GetPharmacyDTO: {
-      meta?: components['schemas']['Meta'];
-      data?: components['schemas']['PharmacyFullDTO'];
-    };
-    GetPharmaciesDTO: {
-      meta?: components['schemas']['Meta'];
-      data?: components['schemas']['PharmacyDTO'][] | null;
-    };
-    GetProductBalancesDTO: {
-      meta?: components['schemas']['Meta'];
-      data?: components['schemas']['ProductBalanceDTO'][] | null;
-    };
-    GetTransactionsDTO: {
-      meta?: components['schemas']['Meta'];
-      data?: components['schemas']['TransactionDTO'][] | null;
     };
     MedicamentDTO: {
       id?: number;
@@ -531,6 +507,10 @@ export interface components {
       barCode?: string | null;
       price?: number;
       isPrescriptionRequired?: boolean;
+    };
+    MedicamentDTOGetListDTO: {
+      meta?: components['schemas']['Meta'];
+      data?: components['schemas']['MedicamentDTO'][] | null;
     };
     MedicamentFullDTO: {
       country?: string | null;
@@ -547,6 +527,10 @@ export interface components {
       price?: number;
       isPrescriptionRequired?: boolean;
     };
+    MedicamentFullDTOGetObjectDTO: {
+      meta?: components['schemas']['Meta'];
+      data?: components['schemas']['MedicamentFullDTO'];
+    };
     MessageData: {
       message?: string | null;
     };
@@ -560,6 +544,10 @@ export interface components {
       address?: string | null;
       city?: string | null;
     };
+    PharmacyDTOGetListDTO: {
+      meta?: components['schemas']['Meta'];
+      data?: components['schemas']['PharmacyDTO'][] | null;
+    };
     PharmacyFullDTO: {
       workingHours?: components['schemas']['WorkingHoursDTO'][] | null;
       registers?: components['schemas']['RegisterDTO'][] | null;
@@ -567,12 +555,20 @@ export interface components {
       address?: string | null;
       city?: string | null;
     };
+    PharmacyFullDTOGetObjectDTO: {
+      meta?: components['schemas']['Meta'];
+      data?: components['schemas']['PharmacyFullDTO'];
+    };
     ProductBalanceDTO: {
       id?: number;
       medicamentName?: string | null;
       price?: number;
       amount?: number;
       expirationDate?: string | null;
+    };
+    ProductBalanceDTOGetListDTO: {
+      meta?: components['schemas']['Meta'];
+      data?: components['schemas']['ProductBalanceDTO'][] | null;
     };
     RegisterDTO: {
       id?: number;
@@ -582,6 +578,10 @@ export interface components {
       createdAt?: string | null;
       totalPrice?: number;
     };
+    TransactionDTOGetListDTO: {
+      meta?: components['schemas']['Meta'];
+      data?: components['schemas']['TransactionDTO'][] | null;
+    };
     TransactionProductDTO: {
       productBalanceId?: number;
       amount?: number;
@@ -590,10 +590,24 @@ export interface components {
       id?: number;
       name?: string | null;
       surname?: string | null;
+      position?: string | null;
+    };
+    UserDTOGetListDTO: {
+      meta?: components['schemas']['Meta'];
+      data?: components['schemas']['UserDTO'][] | null;
+    };
+    UserFullDTO: {
       registrationDate?: string;
       dismissalDate?: string | null;
-      position?: string | null;
       employeeState?: string | null;
+      id?: number;
+      name?: string | null;
+      surname?: string | null;
+      position?: string | null;
+    };
+    UserFullDTOGetObjectDTO: {
+      meta?: components['schemas']['Meta'];
+      data?: components['schemas']['UserFullDTO'];
     };
     WorkingHoursDTO: {
       openTime?: string | null;
