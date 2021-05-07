@@ -10,10 +10,12 @@ import {
 
 interface ProductSelectProps {
   onSelect?: (value: MedicamentDTO) => void;
+  clearOnSelect?: boolean;
 }
 
 export const ProductSelect = ({
   onSelect,
+  clearOnSelect = true,
 }: ProductSelectProps): JSX.Element => {
   const [inputValue, setInputValue] = useState('');
   const [highlighted, setHighlighted] = useState<ProductBalanceDTO | null>(
@@ -68,7 +70,7 @@ export const ProductSelect = ({
     getOptionSelected: (option, value) => option.id === value.id,
     onHighlightChange: (_event, option) => setHighlighted(option),
     onChange: (_event, value) => {
-      setInputValue('');
+      setInputValue(clearOnSelect ? '' : value?.medicamentName ?? '');
       if (value) onSelect?.(value);
     },
     onInputChange: (_event, value) => {
