@@ -16,7 +16,7 @@ export const Header = (): JSX.Element => {
   };
 
   const handleCreateSale = (): void => {
-    navigate('new');
+    navigate('/sale/new');
   };
 
   return (
