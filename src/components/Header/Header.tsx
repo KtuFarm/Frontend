@@ -1,6 +1,8 @@
 import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from 'hooks/useAuth';
 
 export const Header = (): JSX.Element => {
+  const { logout } = useAuth();
   const navigate = useNavigate();
 
   const handleOpenMedicaments = (): void => {
@@ -54,8 +56,8 @@ export const Header = (): JSX.Element => {
             Naujas pardavimas
           </button>
         </nav>
-        <Link
-          to="/login"
+        <button
+          onClick={() => logout()}
           className="inline-flex items-center px-3 py-1 mt-4 text-base bg-gray-100 border-0 rounded focus:outline-none hover:bg-gray-200 md:mt-0"
         >
           Atsijungti
@@ -70,7 +72,7 @@ export const Header = (): JSX.Element => {
           >
             <path d="M5 12h14M12 5l7 7-7 7"></path>
           </svg>
-        </Link>
+        </button>
       </div>
     </header>
   );
