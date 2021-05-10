@@ -420,6 +420,136 @@ export interface paths {
       };
     };
   };
+  '/api/v1/Users/me': {
+    get: {
+      parameters: {
+        header: {
+          /** Api Request header */
+          'X-Api-Request': string;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            'text/plain': components['schemas']['UserFullDTOGetObjectDTO'];
+            'application/json': components['schemas']['UserFullDTOGetObjectDTO'];
+            'text/json': components['schemas']['UserFullDTOGetObjectDTO'];
+          };
+        };
+      };
+    };
+  };
+  '/api/v1/Users/login': {
+    post: {
+      parameters: {
+        header: {
+          /** Api Request header */
+          'X-Api-Request': string;
+        };
+      };
+      responses: {
+        /** Success */
+        200: unknown;
+      };
+      requestBody: {
+        content: {
+          'application/json-patch+json': components['schemas']['LoginDTO'];
+          'application/json': components['schemas']['LoginDTO'];
+          'text/json': components['schemas']['LoginDTO'];
+          'application/*+json': components['schemas']['LoginDTO'];
+        };
+      };
+    };
+  };
+  '/api/v1/Users/signup': {
+    post: {
+      parameters: {
+        header: {
+          /** Api Request header */
+          'X-Api-Request': string;
+        };
+      };
+      responses: {
+        /** Success */
+        200: unknown;
+      };
+      requestBody: {
+        content: {
+          'application/json-patch+json': components['schemas']['CreateUserDTO'];
+          'application/json': components['schemas']['CreateUserDTO'];
+          'text/json': components['schemas']['CreateUserDTO'];
+          'application/*+json': components['schemas']['CreateUserDTO'];
+        };
+      };
+    };
+  };
+  '/api/v1/Warehouses': {
+    get: {
+      parameters: {
+        header: {
+          /** Api Request header */
+          'X-Api-Request': string;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            'text/plain': components['schemas']['WarehouseDTOGetListDTO'];
+            'application/json': components['schemas']['WarehouseDTOGetListDTO'];
+            'text/json': components['schemas']['WarehouseDTOGetListDTO'];
+          };
+        };
+      };
+    };
+  };
+  '/api/v1/Warehouses/{id}': {
+    get: {
+      parameters: {
+        path: {
+          id: number;
+        };
+        header: {
+          /** Api Request header */
+          'X-Api-Request': string;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            'text/plain': components['schemas']['WarehouseDTOGetObjectDTO'];
+            'application/json': components['schemas']['WarehouseDTOGetObjectDTO'];
+            'text/json': components['schemas']['WarehouseDTOGetObjectDTO'];
+          };
+        };
+      };
+    };
+  };
+  '/api/v1/Warehouses/{id}/products': {
+    get: {
+      parameters: {
+        path: {
+          id: number;
+        };
+        header: {
+          /** Api Request header */
+          'X-Api-Request': string;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            'text/plain': components['schemas']['ProductBalanceDTOGetListDTO'];
+            'application/json': components['schemas']['ProductBalanceDTOGetListDTO'];
+            'text/json': components['schemas']['ProductBalanceDTOGetListDTO'];
+          };
+        };
+      };
+    };
+  };
   '/api/v1': {
     get: {
       parameters: {
@@ -467,10 +597,14 @@ export interface components {
       paymentTypeId?: number;
     };
     CreateUserDTO: {
+      email?: string | null;
+      password?: string | null;
       name?: string | null;
       surname?: string | null;
       position?: string | null;
+      departmentId?: number;
       pharmacyId?: number | null;
+      warehouseId?: number | null;
     };
     EditMedicamentDTO: {
       isPrescriptionRequired?: boolean | null;
@@ -490,7 +624,7 @@ export interface components {
       position?: string | null;
       pharmacyId?: number | null;
       dismissalDate?: string | null;
-      employeeState?: string | null;
+      employeeStateId?: number | null;
     };
     EnumDTO: {
       id?: number;
@@ -499,6 +633,10 @@ export interface components {
     EnumDTOGetListDTO: {
       meta?: components['schemas']['Meta'];
       data?: components['schemas']['EnumDTO'][] | null;
+    };
+    LoginDTO: {
+      email?: string | null;
+      password?: string | null;
     };
     MedicamentDTO: {
       id?: number;
@@ -591,6 +729,7 @@ export interface components {
       name?: string | null;
       surname?: string | null;
       position?: string | null;
+      department?: string | null;
     };
     UserDTOGetListDTO: {
       meta?: components['schemas']['Meta'];
@@ -604,10 +743,24 @@ export interface components {
       name?: string | null;
       surname?: string | null;
       position?: string | null;
+      department?: string | null;
     };
     UserFullDTOGetObjectDTO: {
       meta?: components['schemas']['Meta'];
       data?: components['schemas']['UserFullDTO'];
+    };
+    WarehouseDTO: {
+      id?: number;
+      address?: string | null;
+      city?: string | null;
+    };
+    WarehouseDTOGetListDTO: {
+      meta?: components['schemas']['Meta'];
+      data?: components['schemas']['WarehouseDTO'][] | null;
+    };
+    WarehouseDTOGetObjectDTO: {
+      meta?: components['schemas']['Meta'];
+      data?: components['schemas']['WarehouseDTO'];
     };
     WorkingHoursDTO: {
       openTime?: string | null;

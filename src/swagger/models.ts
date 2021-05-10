@@ -21,3 +21,6 @@ export type GetEnumerableDTO = components['schemas']['EnumDTOGetListDTO'];
 export type CreateTransactionDTO = components['schemas']['CreateTransactionDTO'];
 export type GetTransactionsDTO = components['schemas']['TransactionDTOGetListDTO'];
 export type TransactionDTO = components['schemas']['TransactionDTO'];
+
+export type UserDTO = components['schemas']['UserFullDTO'];
+export type LoginDTO = components['schemas']['LoginDTO'];

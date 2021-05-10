@@ -1,6 +1,7 @@
 import { StrictMode } from 'react';
 import { render } from 'react-dom';
 import { BrowserRouter as Router } from 'react-router-dom';
+import { AuthProvider } from 'hooks/useAuth';
 
 import { App } from './App';
 import reportWebVitals from './reportWebVitals';
@@ -10,7 +11,9 @@ import './index.css';
 render(
   <StrictMode>
     <Router>
-      <App />
+      <AuthProvider>
+        <App />
+      </AuthProvider>
     </Router>
   </StrictMode>,
   document.getElementById('root')
