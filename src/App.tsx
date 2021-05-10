@@ -1,4 +1,4 @@
-import { Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import { Home } from 'features/home';
 import { Login } from 'features/login';
 import {
@@ -8,12 +8,23 @@ import {
 } from 'features/medicament';
 import { CreatePharmacy, EditPharmacy, Pharmacies } from 'features/pharmacy';
 import { CreateSale, Sales } from 'features/sale';
+import { useAuth } from 'hooks/useAuth';
 
 export const App = (): JSX.Element => {
+  const { isLoggedIn } = useAuth();
+
+  if (!isLoggedIn) {
+    return (
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="*" element={<Navigate to="/login" />} />
+      </Routes>
+    );
+  }
+
   return (
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route path="/login" element={<Login />} />
       <Route path="/pharmacy" element={<Pharmacies />} />
       <Route path="/pharmacy/new" element={<CreatePharmacy />} />
       <Route path="/pharmacy/:id" element={<EditPharmacy />} />
@@ -22,6 +33,7 @@ export const App = (): JSX.Element => {
       <Route path="/medicament/:id" element={<EditMedicament />} />
       <Route path="/sale" element={<Sales />} />
       <Route path="/sale/new" element={<CreateSale />} />
+      <Route path="*" element={<Navigate to="/" />} />
     </Routes>
   );
 };

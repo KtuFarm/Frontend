@@ -1,30 +1,23 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
+import { useAuth } from 'hooks/useAuth';
 
 export const Login = (): JSX.Element => {
   const navigate = useNavigate();
+  const { clearError, login, error } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
 
   useEffect(() => {
-    setError('');
-  }, [email, password]);
+    clearError();
+  }, [clearError, email, password]);
 
-  const handleLogin = (event: React.FormEvent<HTMLFormElement>): void => {
+  const handleLogin = async (
+    event: React.FormEvent<HTMLFormElement>
+  ): Promise<void> => {
     event.preventDefault();
-
-    if (email === '' || password === '') {
-      setError('Neužpildyti visi laukeliai');
-      return;
-    }
-
-    if (email === 'admin@example.com' && password === 'password') {
-      navigate('/home');
-      return;
-    }
-
-    setError('Blogi prisijungimo duomenys');
+    await login(email, password);
+    navigate('/');
   };
 
   return (
