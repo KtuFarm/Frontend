@@ -31,3 +31,6 @@ export type OrderDTO = schemas['OrderDTO'];
 export type GetOrdersDTO = schemas['OrderDTOGetListDTO'];
 
 export type CreateOrderDTO = schemas['CreateOrderDTO'];
+
+export type GetWarehousesDTO = schemas['WarehouseDTOGetListDTO'];
+export type WarehouseDTO = schemas['WarehouseDTO'];

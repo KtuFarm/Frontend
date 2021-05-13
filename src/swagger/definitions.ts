@@ -442,26 +442,6 @@ export interface paths {
         };
       };
     };
-    post: {
-      parameters: {
-        header: {
-          /** Api Request header */
-          'X-Api-Request': string;
-        };
-      };
-      responses: {
-        /** Success */
-        200: unknown;
-      };
-      requestBody: {
-        content: {
-          'application/json-patch+json': components['schemas']['CreateUserDTO'];
-          'application/json': components['schemas']['CreateUserDTO'];
-          'text/json': components['schemas']['CreateUserDTO'];
-          'application/*+json': components['schemas']['CreateUserDTO'];
-        };
-      };
-    };
   };
   '/api/v1/Users/{id}': {
     get: {
@@ -861,6 +841,8 @@ export interface components {
       registrationDate?: string;
       dismissalDate?: string | null;
       employeeState?: string | null;
+      pharmacyId?: number | null;
+      warehouseId?: number | null;
       id?: number;
       name?: string | null;
       surname?: string | null;
