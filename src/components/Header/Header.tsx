@@ -21,6 +21,10 @@ export const Header = (): JSX.Element => {
     navigate('/sale/new');
   };
 
+  const handleOpenOrders = (): void => {
+    navigate('/order');
+  };
+
   return (
     <header className="text-gray-600 bg-white shadow body-font">
       <div className="container flex flex-col flex-wrap items-center p-5 mx-auto md:flex-row">
@@ -54,6 +58,12 @@ export const Header = (): JSX.Element => {
             className="mr-5 hover:text-gray-900"
           >
             Naujas pardavimas
+          </button>
+          <button
+            onClick={handleOpenOrders}
+            className="mr-5 hover:text-gray-900"
+          >
+            Užsakymai
           </button>
         </nav>
         <button
