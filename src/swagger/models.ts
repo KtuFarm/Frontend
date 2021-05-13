@@ -1,26 +1,31 @@
 import { components } from './definitions';
 
-export type GetPharmaciesDTO = components['schemas']['PharmacyDTOGetListDTO'];
-export type PharmacyDTO = components['schemas']['PharmacyDTO'];
-export type CreatePharmacyDTO = components['schemas']['CreatePharmacyDTO'];
-export type WorkingHoursDTO = components['schemas']['WorkingHoursDTO'];
-export type PharmacyFullDTO = components['schemas']['PharmacyFullDTO'];
-export type EditPharmacyDTO = components['schemas']['EditPharmacyDTO'];
-export type GetProductBalancesDTO = components['schemas']['ProductBalanceDTOGetListDTO'];
-export type ProductBalanceDTO = components['schemas']['ProductBalanceDTO'];
+type schemas = components['schemas'];
 
-export type GetMedicamentsDTO = components['schemas']['MedicamentDTOGetListDTO'];
-export type MedicamentDTO = components['schemas']['MedicamentDTO'];
-export type CreateMedicamentDTO = components['schemas']['CreateMedicamentDTO'];
-export type MedicamentFullDTO = components['schemas']['MedicamentFullDTO'];
-export type EditMedicamentDTO = components['schemas']['EditMedicamentDTO'];
+export type GetPharmaciesDTO = schemas['PharmacyDTOGetListDTO'];
+export type PharmacyDTO = schemas['PharmacyDTO'];
+export type CreatePharmacyDTO = schemas['CreatePharmacyDTO'];
+export type WorkingHoursDTO = schemas['WorkingHoursDTO'];
+export type PharmacyFullDTO = schemas['PharmacyFullDTO'];
+export type EditPharmacyDTO = schemas['EditPharmacyDTO'];
+export type GetProductBalancesDTO = schemas['ProductBalanceDTOGetListDTO'];
+export type ProductBalanceDTO = schemas['ProductBalanceDTO'];
 
-export type EnumDTO = components['schemas']['EnumDTO'];
-export type GetEnumerableDTO = components['schemas']['EnumDTOGetListDTO'];
+export type GetMedicamentsDTO = schemas['MedicamentDTOGetListDTO'];
+export type MedicamentDTO = schemas['MedicamentDTO'];
+export type CreateMedicamentDTO = schemas['CreateMedicamentDTO'];
+export type MedicamentFullDTO = schemas['MedicamentFullDTO'];
+export type EditMedicamentDTO = schemas['EditMedicamentDTO'];
 
-export type CreateTransactionDTO = components['schemas']['CreateTransactionDTO'];
-export type GetTransactionsDTO = components['schemas']['TransactionDTOGetListDTO'];
-export type TransactionDTO = components['schemas']['TransactionDTO'];
+export type EnumDTO = schemas['EnumDTO'];
+export type GetEnumerableDTO = schemas['EnumDTOGetListDTO'];
 
-export type UserDTO = components['schemas']['UserFullDTO'];
-export type LoginDTO = components['schemas']['LoginDTO'];
+export type CreateTransactionDTO = schemas['CreateTransactionDTO'];
+export type GetTransactionsDTO = schemas['TransactionDTOGetListDTO'];
+export type TransactionDTO = schemas['TransactionDTO'];
+
+export type UserDTO = schemas['UserFullDTO'];
+export type LoginDTO = schemas['LoginDTO'];
+
+export type OrderDTO = schemas['OrderDTO'];
+export type GetOrdersDTO = schemas['OrderDTOGetListDTO'];

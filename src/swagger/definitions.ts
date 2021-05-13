@@ -105,6 +105,75 @@ export interface paths {
       };
     };
   };
+  '/api/v1/Orders': {
+    get: {
+      parameters: {
+        header: {
+          /** Api Request header */
+          'X-Api-Request': string;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            'text/plain': components['schemas']['OrderDTOGetListDTO'];
+            'application/json': components['schemas']['OrderDTOGetListDTO'];
+            'text/json': components['schemas']['OrderDTOGetListDTO'];
+          };
+        };
+      };
+    };
+    post: {
+      parameters: {
+        header: {
+          /** Api Request header */
+          'X-Api-Request': string;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            'text/plain': components['schemas']['CreateOrderDTOGetObjectDTO'];
+            'application/json': components['schemas']['CreateOrderDTOGetObjectDTO'];
+            'text/json': components['schemas']['CreateOrderDTOGetObjectDTO'];
+          };
+        };
+      };
+      requestBody: {
+        content: {
+          'application/json-patch+json': components['schemas']['CreateOrderDTO'];
+          'application/json': components['schemas']['CreateOrderDTO'];
+          'text/json': components['schemas']['CreateOrderDTO'];
+          'application/*+json': components['schemas']['CreateOrderDTO'];
+        };
+      };
+    };
+  };
+  '/api/v1/Orders/{id}': {
+    get: {
+      parameters: {
+        path: {
+          id: number;
+        };
+        header: {
+          /** Api Request header */
+          'X-Api-Request': string;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            'text/plain': components['schemas']['OrderFullDTOGetObjectDTO'];
+            'application/json': components['schemas']['OrderFullDTOGetObjectDTO'];
+            'text/json': components['schemas']['OrderFullDTOGetObjectDTO'];
+          };
+        };
+      };
+    };
+  };
   '/api/v1/PaymentTypes': {
     get: {
       parameters: {
@@ -307,6 +376,26 @@ export interface paths {
             'text/plain': components['schemas']['TransactionDTOGetListDTO'];
             'application/json': components['schemas']['TransactionDTOGetListDTO'];
             'text/json': components['schemas']['TransactionDTOGetListDTO'];
+          };
+        };
+      };
+    };
+  };
+  '/api/v1/Products': {
+    get: {
+      parameters: {
+        header: {
+          /** Api Request header */
+          'X-Api-Request': string;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            'text/plain': components['schemas']['ProductBalanceDTOGetListDTO'];
+            'application/json': components['schemas']['ProductBalanceDTOGetListDTO'];
+            'text/json': components['schemas']['ProductBalanceDTOGetListDTO'];
           };
         };
       };
@@ -584,6 +673,17 @@ export interface components {
       isReimbursed?: boolean;
       reimbursePercentage?: number | null;
     };
+    CreateOrderDTO: {
+      warehouseId?: number;
+      pharmacyId?: number;
+      products?: components['schemas']['TransactionProductDTO'][] | null;
+      creationDate?: string;
+      deliveryDate?: string;
+    };
+    CreateOrderDTOGetObjectDTO: {
+      meta?: components['schemas']['Meta'];
+      data?: components['schemas']['CreateOrderDTO'];
+    };
     CreatePharmacyDTO: {
       address?: string | null;
       city?: string | null;
@@ -677,6 +777,28 @@ export interface components {
       data?: components['schemas']['MessageData'];
     };
     Meta: { [key: string]: unknown };
+    OrderDTO: {
+      orderId?: number;
+      addressFrom?: string | null;
+      addressTo?: string | null;
+      expectedDelivery?: string | null;
+    };
+    OrderDTOGetListDTO: {
+      meta?: components['schemas']['Meta'];
+      data?: components['schemas']['OrderDTO'][] | null;
+    };
+    OrderFullDTO: {
+      products?: components['schemas']['ProductBalanceDTO'][] | null;
+      total?: number;
+      orderId?: number;
+      addressFrom?: string | null;
+      addressTo?: string | null;
+      expectedDelivery?: string | null;
+    };
+    OrderFullDTOGetObjectDTO: {
+      meta?: components['schemas']['Meta'];
+      data?: components['schemas']['OrderFullDTO'];
+    };
     PharmacyDTO: {
       pharmacyNo?: number;
       address?: string | null;

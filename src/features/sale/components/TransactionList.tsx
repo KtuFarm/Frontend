@@ -1,5 +1,8 @@
 import { TransactionDTO } from 'swagger/models';
 
+import { formatDate } from 'utils/date';
+import { formatMoney } from 'utils/money';
+
 interface PharmacyListProps {
   transactions: TransactionDTO[];
   error: string;
@@ -46,26 +49,16 @@ export const TransactionList = ({
       </thead>
       <tbody>
         {transactions.map((transaction, index) => {
-          const createdAt = transaction.createdAt ?? '';
-          const createdDate = new Date(createdAt);
-          const localizedDate = createdDate.toLocaleDateString('lt-LT');
-          const localizedTime = createdDate.toLocaleTimeString('lt-LT');
-
-          const localizedPrice = (transaction.totalPrice ?? 0).toLocaleString(
-            'lt-LT',
-            {
-              style: 'currency',
-              currency: 'EUR',
-            }
-          );
+          const { date, time } = formatDate(transaction.createdAt);
+          const price = formatMoney(transaction.totalPrice);
 
           return (
             <tr key={index}>
               <td className="px-4 py-3">{index + 1}</td>
               <td className="px-4 py-3">
-                {localizedDate} {localizedTime}
+                {date} {time}
               </td>
-              <td className="px-4 py-3">{localizedPrice}</td>
+              <td className="px-4 py-3">{price}</td>
             </tr>
           );
         })}
