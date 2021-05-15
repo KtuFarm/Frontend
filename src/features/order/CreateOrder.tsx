@@ -37,7 +37,7 @@ export const CreateOrder = (): JSX.Element => {
     try {
       const response = await createOrder(order);
 
-      if (response.status !== 200) throw new Error('Nepavyko sukurti užsakymo');
+      if (response.status !== 201) throw new Error('Nepavyko sukurti užsakymo');
 
       navigate('/order');
     } catch (error) {
