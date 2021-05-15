@@ -1,23 +1,25 @@
 import { CreateOrderDTO, ProductBalanceDTO } from 'swagger/models';
 
-import { API_HOST, DEFAULT_HEADERS } from '../../../constants';
+import { getHeadersWithAuth } from 'utils/headers';
+
+import { API_HOST } from '../../../constants';
 
 export const getOrders = async (): Promise<Response> => {
   return fetch(`${API_HOST}/api/v1/Orders`, {
-    headers: DEFAULT_HEADERS,
+    headers: getHeadersWithAuth(),
   });
 };
 
 export const getOrder = async (id: number | string): Promise<Response> => {
   return fetch(`${API_HOST}/api/v1/Orders/${id}`, {
-    headers: DEFAULT_HEADERS,
+    headers: getHeadersWithAuth(),
   });
 };
 
 export const createOrder = async (order: CreateOrderDTO): Promise<Response> => {
   return fetch(`${API_HOST}/api/v1/Orders`, {
     method: 'POST',
-    headers: DEFAULT_HEADERS,
+    headers: getHeadersWithAuth(),
     body: JSON.stringify(order),
   });
 };
@@ -28,7 +30,7 @@ export const updateOrder = async (
 ): Promise<Response> => {
   return fetch(`${API_HOST}/api/v1/Orders/${id}`, {
     method: 'PUT',
-    headers: DEFAULT_HEADERS,
+    headers: getHeadersWithAuth(),
     body: JSON.stringify(products),
   });
 };
@@ -36,20 +38,20 @@ export const updateOrder = async (
 export const cancelOrder = async (id: number | string): Promise<Response> => {
   return fetch(`${API_HOST}/api/v1/Orders/${id}/cancel`, {
     method: 'POST',
-    headers: DEFAULT_HEADERS,
+    headers: getHeadersWithAuth(),
   });
 };
 
 export const approveOrder = async (id: number | string): Promise<Response> => {
   return fetch(`${API_HOST}/api/v1/Orders/${id}/approve`, {
     method: 'POST',
-    headers: DEFAULT_HEADERS,
+    headers: getHeadersWithAuth(),
   });
 };
 
 export const prepareOrder = async (id: number | string): Promise<Response> => {
   return fetch(`${API_HOST}/api/v1/Orders/${id}/prepare`, {
     method: 'POST',
-    headers: DEFAULT_HEADERS,
+    headers: getHeadersWithAuth(),
   });
 };

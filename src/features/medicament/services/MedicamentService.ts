@@ -1,16 +1,18 @@
 import { CreateMedicamentDTO, EditMedicamentDTO } from 'swagger/models';
 
-import { API_HOST, DEFAULT_HEADERS } from '../../../constants';
+import { getHeadersWithAuth } from 'utils/headers';
+
+import { API_HOST } from '../../../constants';
 
 export const getMedicaments = async (): Promise<Response> => {
   return fetch(`${API_HOST}/api/v1/Medicaments`, {
-    headers: DEFAULT_HEADERS,
+    headers: getHeadersWithAuth(),
   });
 };
 
 export const getPharmaceuticalForms = async (): Promise<Response> => {
   return fetch(`${API_HOST}/api/v1/PharmaceuticalForms`, {
-    headers: DEFAULT_HEADERS,
+    headers: getHeadersWithAuth(),
   });
 };
 
@@ -19,14 +21,14 @@ export const createMedicament = async (
 ): Promise<Response> => {
   return fetch(`${API_HOST}/api/v1/Medicaments`, {
     method: 'POST',
-    headers: DEFAULT_HEADERS,
+    headers: getHeadersWithAuth(),
     body: JSON.stringify(medicament),
   });
 };
 
 export const getMedicament = async (id: number | string): Promise<Response> => {
   return fetch(`${API_HOST}/api/v1/Medicaments/${id}`, {
-    headers: DEFAULT_HEADERS,
+    headers: getHeadersWithAuth(),
   });
 };
 
@@ -36,7 +38,7 @@ export const updateMedicament = async (
 ): Promise<Response> => {
   return fetch(`${API_HOST}/api/v1/Medicaments/${id}`, {
     method: 'PUT',
-    headers: DEFAULT_HEADERS,
+    headers: getHeadersWithAuth(),
     body: JSON.stringify(medicament),
   });
 };
@@ -46,6 +48,6 @@ export const removeMedicament = async (
 ): Promise<Response> => {
   return fetch(`${API_HOST}/api/v1/Medicaments/${id}`, {
     method: 'DELETE',
-    headers: DEFAULT_HEADERS,
+    headers: getHeadersWithAuth(),
   });
 };
