@@ -191,6 +191,23 @@ export interface paths {
       };
     };
   };
+  '/api/v1/Orders/{id}/cancel': {
+    post: {
+      parameters: {
+        path: {
+          id: number;
+        };
+        header: {
+          /** Api Request header */
+          'X-Api-Request': string;
+        };
+      };
+      responses: {
+        /** Success */
+        200: unknown;
+      };
+    };
+  };
   '/api/v1/Orders/{id}/approve': {
     post: {
       parameters: {
@@ -814,6 +831,8 @@ export interface components {
     OrderFullDTO: {
       products?: components['schemas']['ProductBalanceDTO'][] | null;
       total?: number;
+      warehouseId?: number;
+      pharmacyId?: number;
       orderId?: number;
       addressFrom?: string | null;
       addressTo?: string | null;
