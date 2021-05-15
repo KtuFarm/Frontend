@@ -1,7 +1,9 @@
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from 'hooks/useAuth';
 import { OrderDTO } from 'swagger/models';
 
 import { formatDate } from 'utils/date';
+import { canCancel, OrderState, stateTranslations } from 'utils/orderStates';
 
 interface OrderListProps {
   orders: OrderDTO[];
@@ -16,6 +18,7 @@ export const OrderList = ({
   loading,
   onCancel,
 }: OrderListProps): JSX.Element => {
+  const { department } = useAuth();
   const navigate = useNavigate();
 
   const handleCancel = (orderId: number | undefined): void => {
@@ -58,6 +61,7 @@ export const OrderList = ({
           <th className="px-4 py-3">Sandėlio adresas</th>
           <th className="px-4 py-3">Užsakovo adresas</th>
           <th className="px-4 py-3">Numatytas pristatymas</th>
+          <th className="px-4 py-3">Statusas</th>
           <th className="px-4 py-3"></th>
         </tr>
       </thead>
@@ -65,6 +69,7 @@ export const OrderList = ({
         {orders.map((order, index) => {
           const { orderId, addressFrom, addressTo, expectedDelivery } = order;
           const { date: deliveryDate } = formatDate(expectedDelivery);
+          const state = order.orderState as OrderState;
 
           return (
             <tr key={orderId}>
@@ -72,6 +77,7 @@ export const OrderList = ({
               <td className="px-4 py-3">{addressFrom}</td>
               <td className="px-4 py-3">{addressTo}€</td>
               <td className="px-4 py-3">{deliveryDate}</td>
+              <td className="px-4 py-3">{stateTranslations[state]}</td>
               <td className="px-4 py-3 text-right">
                 <button
                   className="mr-4 text-indigo-500 outline-none appearance-none hover:underline hover:text-indigo-600 focus:outline-none"
@@ -79,13 +85,15 @@ export const OrderList = ({
                 >
                   Redaguoti
                 </button>
-                <button
-                  className="text-red-500 outline-none appearance-none hover:underline hover:text-red-600 focus:outline-none"
-                  type="button"
-                  onClick={() => handleCancel(orderId)}
-                >
-                  Pašalinti
-                </button>
+                {canCancel(state, department) ? (
+                  <button
+                    className="text-red-500 outline-none appearance-none hover:underline hover:text-red-600 focus:outline-none"
+                    type="button"
+                    onClick={() => handleCancel(orderId)}
+                  >
+                    Atšaukti
+                  </button>
+                ) : null}
               </td>
             </tr>
           );

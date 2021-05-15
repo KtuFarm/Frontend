@@ -8,9 +8,12 @@ import {
 import * as authService from 'features/login/services/AuthService';
 import { UserDTO } from 'swagger/models';
 
+import { Department } from 'utils/departments';
+
 interface AuthState {
   isLoggedIn: boolean;
   user: UserDTO | null;
+  department: Department;
   loading: boolean;
   error: string;
   login: (email: string, password: string) => Promise<void>;
@@ -21,6 +24,7 @@ interface AuthState {
 const initialState: AuthState = {
   isLoggedIn: false,
   user: null,
+  department: Department.None,
   loading: false,
   error: '',
   // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -48,6 +52,7 @@ export const useAuth = (): AuthState => {
 
 const useProvideAuth = (): AuthState => {
   const [user, setUser] = useState<UserDTO | null>(null);
+  const [department, setDepartment] = useState<Department>(Department.None);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -94,7 +99,10 @@ const useProvideAuth = (): AuthState => {
         return;
       }
 
+      const newDepartment = newUser.department as Department;
+
       setUser(newUser);
+      setDepartment(newDepartment);
     } catch (error) {
       setError(error?.message ?? '');
     } finally {
@@ -119,6 +127,7 @@ const useProvideAuth = (): AuthState => {
   return {
     isLoggedIn,
     user,
+    department,
     loading,
     error,
     login,

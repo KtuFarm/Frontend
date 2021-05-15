@@ -32,3 +32,10 @@ export const updateOrder = async (
     body: JSON.stringify(products),
   });
 };
+
+export const cancelOrder = async (id: number | string): Promise<Response> => {
+  return fetch(`${API_HOST}/api/v1/Orders/${id}/cancel`, {
+    method: 'POST',
+    headers: DEFAULT_HEADERS,
+  });
+};
