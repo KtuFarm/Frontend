@@ -1,19 +1,28 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import { getWarehouses } from 'features/warehouse/service/WarehouseService';
-import { CreateOrderDTO, GetWarehousesDTO, WarehouseDTO } from 'swagger/models';
+import {
+  CreateOrderDTO,
+  GetWarehousesDTO,
+  OrderFullDTO,
+  WarehouseDTO,
+} from 'swagger/models';
 
 import { Layout } from 'components/Layout';
 
 import { OrderForm } from './components/OrderForm';
-import { createOrder } from './services/OrderService';
+import { getOrder, updateOrder } from './services/OrderService';
 
-export const CreateOrder = (): JSX.Element => {
+export const EditOrder = (): JSX.Element => {
   const navigate = useNavigate();
+  const params = useParams();
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [warehouses, setWarehouses] = useState<WarehouseDTO[]>([]);
+  const [order, setOrder] = useState<OrderFullDTO | null>(null);
+
+  const orderId = params?.id ?? '';
 
   const fetchWarehouses = async (): Promise<void> => {
     setLoading(true);
@@ -29,21 +38,32 @@ export const CreateOrder = (): JSX.Element => {
   };
 
   useEffect(() => {
+    const fetchOrder = async (): Promise<void> => {
+      setLoading(true);
+      try {
+        const response = await getOrder(orderId);
+        const data = await response.json();
+        setOrder(data?.data as OrderFullDTO);
+      } catch (error) {
+        setError(error?.message ?? '');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchOrder();
+  }, [orderId]);
+
+  useEffect(() => {
     fetchWarehouses();
   }, []);
 
   const handleSubmit = async (order: CreateOrderDTO): Promise<void> => {
     setSubmitting(true);
     try {
-      const response = await createOrder(order);
+      const response = await updateOrder(orderId, order.products ?? []);
 
-      if (response.status === 400) {
-        const data = await response.json();
-        if (data?.title === 'object_already_exists')
-          throw new Error('Užsakymas iš šio sandėlio jau yra');
-      }
-
-      if (response.status !== 201) throw new Error('Nepavyko sukurti užsakymo');
+      if (response.status !== 200) throw new Error('Nepavyko sukurti užsakymo');
 
       navigate('/order');
     } catch (error) {
@@ -58,12 +78,13 @@ export const CreateOrder = (): JSX.Element => {
   }, []);
 
   return (
-    <Layout title="Naujas užsakymas">
+    <Layout title={`Redaguoti užsakymą #${orderId}`}>
       <OrderForm
         loading={loading}
         warehouses={warehouses}
         error={error}
         submitting={submitting}
+        order={order}
         onSubmit={handleSubmit}
         onClearError={handleClearError}
       />

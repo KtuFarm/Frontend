@@ -23,7 +23,7 @@ export const OrderList = ({
   };
 
   const handleEditOrder = (orderId: number | undefined): void => {
-    if (orderId) navigate(`/medicament/${orderId}`);
+    if (orderId) navigate(`/order/${orderId}`);
   };
 
   if (error) {
@@ -45,7 +45,7 @@ export const OrderList = ({
   if (orders.length === 0) {
     return (
       <div className="pb-4">
-        <p className="text-center">Nėra vaistų</p>
+        <p className="text-center">Nėra užsakymų</p>
       </div>
     );
   }

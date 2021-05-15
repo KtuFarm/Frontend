@@ -29,8 +29,8 @@ export type LoginDTO = schemas['LoginDTO'];
 
 export type OrderDTO = schemas['OrderDTO'];
 export type GetOrdersDTO = schemas['OrderDTOGetListDTO'];
-
 export type CreateOrderDTO = schemas['CreateOrderDTO'];
+export type OrderFullDTO = schemas['OrderFullDTO'];
 
 export type GetWarehousesDTO = schemas['WarehouseDTOGetListDTO'];
 export type WarehouseDTO = schemas['WarehouseDTO'];

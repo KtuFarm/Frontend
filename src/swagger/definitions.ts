@@ -133,13 +133,7 @@ export interface paths {
       };
       responses: {
         /** Success */
-        200: {
-          content: {
-            'text/plain': components['schemas']['CreateOrderDTOGetObjectDTO'];
-            'application/json': components['schemas']['CreateOrderDTOGetObjectDTO'];
-            'text/json': components['schemas']['CreateOrderDTOGetObjectDTO'];
-          };
-        };
+        200: unknown;
       };
       requestBody: {
         content: {
@@ -171,6 +165,80 @@ export interface paths {
             'text/json': components['schemas']['OrderFullDTOGetObjectDTO'];
           };
         };
+      };
+    };
+    put: {
+      parameters: {
+        path: {
+          id: number;
+        };
+        header: {
+          /** Api Request header */
+          'X-Api-Request': string;
+        };
+      };
+      responses: {
+        /** Success */
+        200: unknown;
+      };
+      requestBody: {
+        content: {
+          'application/json-patch+json': components['schemas']['TransactionProductDTO'][];
+          'application/json': components['schemas']['TransactionProductDTO'][];
+          'text/json': components['schemas']['TransactionProductDTO'][];
+          'application/*+json': components['schemas']['TransactionProductDTO'][];
+        };
+      };
+    };
+  };
+  '/api/v1/Orders/{id}/cancel': {
+    post: {
+      parameters: {
+        path: {
+          id: number;
+        };
+        header: {
+          /** Api Request header */
+          'X-Api-Request': string;
+        };
+      };
+      responses: {
+        /** Success */
+        200: unknown;
+      };
+    };
+  };
+  '/api/v1/Orders/{id}/approve': {
+    post: {
+      parameters: {
+        path: {
+          id: number;
+        };
+        header: {
+          /** Api Request header */
+          'X-Api-Request': string;
+        };
+      };
+      responses: {
+        /** Success */
+        200: unknown;
+      };
+    };
+  };
+  '/api/v1/Orders/{id}/prepare': {
+    post: {
+      parameters: {
+        path: {
+          id: number;
+        };
+        header: {
+          /** Api Request header */
+          'X-Api-Request': string;
+        };
+      };
+      responses: {
+        /** Success */
+        200: unknown;
       };
     };
   };
@@ -655,14 +723,7 @@ export interface components {
     };
     CreateOrderDTO: {
       warehouseId?: number;
-      pharmacyId?: number;
       products?: components['schemas']['TransactionProductDTO'][] | null;
-      creationDate?: string;
-      deliveryDate?: string;
-    };
-    CreateOrderDTOGetObjectDTO: {
-      meta?: components['schemas']['Meta'];
-      data?: components['schemas']['CreateOrderDTO'];
     };
     CreatePharmacyDTO: {
       address?: string | null;
@@ -770,6 +831,8 @@ export interface components {
     OrderFullDTO: {
       products?: components['schemas']['ProductBalanceDTO'][] | null;
       total?: number;
+      warehouseId?: number;
+      pharmacyId?: number;
       orderId?: number;
       addressFrom?: string | null;
       addressTo?: string | null;
