@@ -8,6 +8,7 @@ import {
 } from 'features/medicament';
 import { CreateOrder, EditOrder, Orders } from 'features/order';
 import { CreatePharmacy, EditPharmacy, Pharmacies } from 'features/pharmacy';
+import { Products } from 'features/product';
 import { CreateSale, Sales } from 'features/sale';
 import { useAuth } from 'hooks/useAuth';
 
@@ -37,6 +38,7 @@ export const App = (): JSX.Element => {
       <Route path="/order" element={<Orders />} />
       <Route path="/order/new" element={<CreateOrder />} />
       <Route path="/order/:id" element={<EditOrder />} />
+      <Route path="/product" element={<Products />} />
       <Route path="*" element={<Navigate to="/" />} />
     </Routes>
   );
