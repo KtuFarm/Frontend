@@ -8,6 +8,12 @@ export const getOrders = async (): Promise<Response> => {
   });
 };
 
+export const getOrder = async (id: number | string): Promise<Response> => {
+  return fetch(`${API_HOST}/api/v1/Orders/${id}`, {
+    headers: DEFAULT_HEADERS,
+  });
+};
+
 export const createOrder = async (order: CreateOrderDTO): Promise<Response> => {
   return fetch(`${API_HOST}/api/v1/Orders`, {
     method: 'POST',

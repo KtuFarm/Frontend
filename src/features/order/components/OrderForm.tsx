@@ -1,11 +1,11 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { ProductSelect } from 'features/sale/components/ProductSelect';
 import { getWarehouseProducts } from 'features/warehouse/service/WarehouseService';
-import { useAuth } from 'hooks/useAuth';
 import {
   CreateOrderDTO,
   GetProductBalancesDTO,
   MedicamentDTO,
+  OrderFullDTO,
   ProductBalanceDTO,
   WarehouseDTO,
 } from 'swagger/models';
@@ -13,11 +13,6 @@ import {
 import { Button } from 'components/Button';
 import { Label } from 'components/Label';
 import { Select } from 'components/Select';
-
-interface OrderItem {
-  product: ProductBalanceDTO;
-  amount: number;
-}
 
 const formatMoney = (amount: number): string =>
   amount.toLocaleString('lt-LT', { style: 'currency', currency: 'EUR' });
@@ -27,6 +22,7 @@ interface OrderFormProps {
   warehouses: WarehouseDTO[];
   error: string;
   submitting: boolean;
+  order?: OrderFullDTO | null;
   onSubmit: (order: CreateOrderDTO) => unknown;
   onClearError: () => unknown;
 }
@@ -38,9 +34,9 @@ export const OrderForm = ({
   onClearError,
   onSubmit,
   warehouses,
+  order = null,
 }: OrderFormProps): JSX.Element => {
-  const { user } = useAuth();
-  const [orderItems, setOrdetItems] = useState<OrderItem[]>([]);
+  const [orderItems, setOrderItems] = useState<ProductBalanceDTO[]>([]);
   const [warehouseId, setWarehouseId] = useState(-1);
 
   const getProducts = useCallback(async (): Promise<ProductBalanceDTO[]> => {
@@ -50,18 +46,24 @@ export const OrderForm = ({
   }, [warehouseId]);
 
   useEffect(() => {
+    if (order == null) return;
+
+    setOrderItems(order.products ?? []);
+  }, [order]);
+
+  useEffect(() => {
     onClearError();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [orderItems]);
 
   const handleAdd = (medicament: MedicamentDTO): void => {
-    setOrdetItems([...orderItems, { product: medicament, amount: 1 }]);
+    setOrderItems([...orderItems, { ...medicament, amount: 1 }]);
   };
 
   const handleRemove = (id: number | undefined): void => {
     if (id === undefined) return;
 
-    setOrdetItems(orderItems.filter((item) => item.product.id !== id));
+    setOrderItems(orderItems.filter((item) => item.id !== id));
   };
 
   const handleChangeWarehouse = (
@@ -81,10 +83,10 @@ export const OrderForm = ({
     if (Number.isNaN(newAmount)) return;
 
     const newOrderItems = [...orderItems];
-    const index = newOrderItems.findIndex((item) => item.product.id === id);
+    const index = newOrderItems.findIndex((item) => item.id === id);
     newOrderItems[index].amount = newAmount;
 
-    setOrdetItems(newOrderItems);
+    setOrderItems(newOrderItems);
   };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
@@ -92,12 +94,11 @@ export const OrderForm = ({
 
     const products = orderItems.map((item) => ({
       amount: item.amount,
-      productBalanceId: item.product.id,
+      productBalanceId: item.id,
     }));
 
     const order: CreateOrderDTO = {
       products,
-      pharmacyId: user?.pharmacyId ?? undefined,
       warehouseId,
     };
 
@@ -119,8 +120,13 @@ export const OrderForm = ({
               name="warehouseId"
               value={warehouseId}
               onChange={handleChangeWarehouse}
+              disabled={order != null}
             >
-              <option value="-1">Pasirinkite sandėlį</option>
+              {order != null ? (
+                <option value="-1">{order.addressTo}</option>
+              ) : (
+                <option value="-1">Pasirinkite sandėlį</option>
+              )}
               {warehouses.map((warehouse) => {
                 return (
                   <option key={warehouse.id} value={warehouse.id}>
@@ -136,7 +142,7 @@ export const OrderForm = ({
           <ProductSelect
             clearOnSelect={false}
             onSelect={handleAdd}
-            disabled={warehouseId === -1}
+            disabled={warehouseId === -1 && order == null}
             getProducts={getProducts}
           />
         </div>
@@ -178,22 +184,24 @@ export const OrderForm = ({
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
-                    {orderItems.map((saleItem) => {
-                      const price = saleItem.product.price ?? 0;
-                      const totalPrice = price * saleItem.amount;
+                    {orderItems.map((orderItem) => {
+                      console.log(orderItem);
+                      const price = orderItem.price ?? 0;
+                      const amount = orderItem.price ?? 0;
+                      const totalPrice = price * amount;
                       return (
-                        <tr key={saleItem.product.id}>
+                        <tr key={orderItem.id}>
                           <td className="px-6 py-4 whitespace-nowrap">
                             <div className="flex items-center">
                               <div>
                                 <div className="text-sm font-medium text-gray-900">
-                                  {saleItem.product.medicamentName}
+                                  {orderItem.medicamentName}
                                 </div>
                                 <div className="text-sm text-gray-500">
                                   {
-                                    (
-                                      saleItem.product.expirationDate ?? ''
-                                    ).split('T')[0]
+                                    (orderItem.expirationDate ?? '').split(
+                                      'T'
+                                    )[0]
                                   }
                                 </div>
                               </div>
@@ -204,9 +212,9 @@ export const OrderForm = ({
                               <input
                                 type="text"
                                 className="flex-1 block w-0 border-gray-300 rounded-md disabled:cursor-not-allowed disabled:bg-gray-100 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                                value={saleItem.amount}
+                                value={orderItem.amount}
                                 onChange={(event) =>
-                                  handleChangeAmount(event, saleItem.product.id)
+                                  handleChangeAmount(event, orderItem.id)
                                 }
                               />
                             </div>
@@ -220,7 +228,7 @@ export const OrderForm = ({
                           <td className="px-6 py-4 text-sm font-medium text-right whitespace-nowrap">
                             <button
                               className="text-red-600 outline-none hover:text-red-900 focus:outline-none"
-                              onClick={() => handleRemove(saleItem.product.id)}
+                              onClick={() => handleRemove(orderItem.id)}
                             >
                               Pašalinti
                             </button>

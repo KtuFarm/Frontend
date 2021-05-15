@@ -23,7 +23,7 @@ export const OrderList = ({
   };
 
   const handleEditOrder = (orderId: number | undefined): void => {
-    if (orderId) navigate(`/medicament/${orderId}`);
+    if (orderId) navigate(`/order/${orderId}`);
   };
 
   if (error) {
