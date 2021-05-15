@@ -1,20 +1,37 @@
 import { useCallback, useEffect, useState } from 'react';
 import useAutocomplete from '@material-ui/lab/useAutocomplete';
 import { getPharmacyProducts } from 'features/pharmacy/services/PharmacyService';
+import { useAuth } from 'hooks/useAuth';
 import debounce from 'lodash.debounce';
 import {
   GetProductBalancesDTO,
   MedicamentDTO,
   ProductBalanceDTO,
+  UserDTO,
 } from 'swagger/models';
 
 interface ProductSelectProps {
   onSelect?: (value: MedicamentDTO) => void;
+  clearOnSelect?: boolean;
+  disabled?: boolean;
+  getProducts?: (user?: UserDTO | null) => Promise<ProductBalanceDTO[]>;
 }
+
+const defaultGetProducts = async (
+  user?: UserDTO | null
+): Promise<ProductBalanceDTO[]> => {
+  const response = await getPharmacyProducts(user?.pharmacyId ?? -1);
+  const data: GetProductBalancesDTO = await response.json();
+  return data.data ?? [];
+};
 
 export const ProductSelect = ({
   onSelect,
+  clearOnSelect = true,
+  disabled = false,
+  getProducts = defaultGetProducts,
 }: ProductSelectProps): JSX.Element => {
+  const { user } = useAuth();
   const [inputValue, setInputValue] = useState('');
   const [highlighted, setHighlighted] = useState<ProductBalanceDTO | null>(
     null
@@ -26,15 +43,14 @@ export const ProductSelect = ({
   const fetchProducts = useCallback(async (): Promise<void> => {
     // setLoading(true);
     try {
-      const response = await getPharmacyProducts(1);
-      const data: GetProductBalancesDTO = await response.json();
-      setProducts(data.data as ProductBalanceDTO[]);
+      const newProducts = await getProducts(user);
+      setProducts(newProducts);
     } catch (error) {
       // setError(error?.message ?? '');
     } finally {
       // setLoading(false);
     }
-  }, []);
+  }, [getProducts, user]);
 
   useEffect(() => {
     const debouncedFetchProducts = debounce(fetchProducts, 300);
@@ -68,7 +84,7 @@ export const ProductSelect = ({
     getOptionSelected: (option, value) => option.id === value.id,
     onHighlightChange: (_event, option) => setHighlighted(option),
     onChange: (_event, value) => {
-      setInputValue('');
+      setInputValue(clearOnSelect ? '' : value?.medicamentName ?? '');
       if (value) onSelect?.(value);
     },
     onInputChange: (_event, value) => {
@@ -89,7 +105,8 @@ export const ProductSelect = ({
         <input
           type="text"
           {...getInputProps()}
-          className="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+          disabled={disabled}
+          className="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm disabled:cursor-not-allowed disabled:bg-gray-100"
         />
 
         {groupedOptions.length > 0 ? (
