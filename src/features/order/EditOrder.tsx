@@ -11,7 +11,7 @@ import {
 import { Layout } from 'components/Layout';
 
 import { OrderForm } from './components/OrderForm';
-import { createOrder, getOrder } from './services/OrderService';
+import { getOrder, updateOrder } from './services/OrderService';
 
 export const EditOrder = (): JSX.Element => {
   const navigate = useNavigate();
@@ -61,7 +61,7 @@ export const EditOrder = (): JSX.Element => {
   const handleSubmit = async (order: CreateOrderDTO): Promise<void> => {
     setSubmitting(true);
     try {
-      const response = await createOrder(order);
+      const response = await updateOrder(orderId, order.products ?? []);
 
       if (response.status !== 200) throw new Error('Nepavyko sukurti užsakymo');
 

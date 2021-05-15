@@ -1,4 +1,4 @@
-import { CreateOrderDTO } from 'swagger/models';
+import { CreateOrderDTO, ProductBalanceDTO } from 'swagger/models';
 
 import { API_HOST, DEFAULT_HEADERS } from '../../../constants';
 
@@ -19,5 +19,16 @@ export const createOrder = async (order: CreateOrderDTO): Promise<Response> => {
     method: 'POST',
     headers: DEFAULT_HEADERS,
     body: JSON.stringify(order),
+  });
+};
+
+export const updateOrder = async (
+  id: number | string,
+  products: ProductBalanceDTO[]
+): Promise<Response> => {
+  return fetch(`${API_HOST}/api/v1/Orders/${id}`, {
+    method: 'PUT',
+    headers: DEFAULT_HEADERS,
+    body: JSON.stringify(products),
   });
 };
