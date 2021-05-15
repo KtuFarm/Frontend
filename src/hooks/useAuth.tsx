@@ -9,6 +9,7 @@ import * as authService from 'features/login/services/AuthService';
 import { UserDTO } from 'swagger/models';
 
 import { Department } from 'utils/departments';
+import { storage } from 'utils/storage';
 
 interface AuthState {
   isLoggedIn: boolean;
@@ -25,7 +26,7 @@ const initialState: AuthState = {
   isLoggedIn: false,
   user: null,
   department: Department.None,
-  loading: false,
+  loading: true,
   error: '',
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   async login() {},
@@ -72,7 +73,7 @@ const useProvideAuth = (): AuthState => {
         return;
       }
 
-      sessionStorage.setItem('token', jwt);
+      storage.set('token', jwt);
       await me(jwt);
     } catch (error) {
       setError(error?.message ?? '');
@@ -112,7 +113,10 @@ const useProvideAuth = (): AuthState => {
 
   const logout = (): void => {
     setUser(null);
-    sessionStorage.removeItem('token');
+    setDepartment(Department.None);
+    setLoading(false);
+    setError('');
+    storage.remove('token');
   };
 
   useEffect(() => {

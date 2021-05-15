@@ -12,8 +12,18 @@ import { Products } from 'features/product';
 import { CreateSale, Sales } from 'features/sale';
 import { useAuth } from 'hooks/useAuth';
 
+import { Loader } from 'components/Loader';
+
 export const App = (): JSX.Element => {
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="text-indigo-600 flex justify-center items-center w-screen h-screen">
+        <Loader />
+      </div>
+    );
+  }
 
   if (!isLoggedIn) {
     return (
