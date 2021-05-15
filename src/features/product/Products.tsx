@@ -1,9 +1,5 @@
 import { useEffect, useState } from 'react';
-import {
-  GetProductBalancesDTO,
-  MedicamentDTO,
-  ProductBalanceDTO,
-} from 'swagger/models';
+import { GetProductBalancesDTO, ProductBalanceDTO } from 'swagger/models';
 
 import { Container } from 'components/Container';
 import { Content } from 'components/Content';
@@ -14,7 +10,7 @@ import { getProducts } from './services/ProductService';
 export const Products = (): JSX.Element => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [products, setProducts] = useState<MedicamentDTO[]>([]);
+  const [products, setProducts] = useState<ProductBalanceDTO[]>([]);
 
   const fetchProducts = async (): Promise<void> => {
     setLoading(true);
