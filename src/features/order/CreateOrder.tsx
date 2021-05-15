@@ -37,6 +37,12 @@ export const CreateOrder = (): JSX.Element => {
     try {
       const response = await createOrder(order);
 
+      if (response.status === 400) {
+        const data = await response.json();
+        if (data?.title === 'object_already_exists')
+          throw new Error('Užsakymas iš šio sandėlio jau yra');
+      }
+
       if (response.status !== 201) throw new Error('Nepavyko sukurti užsakymo');
 
       navigate('/order');
