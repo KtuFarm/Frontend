@@ -63,7 +63,8 @@ export const Orders = (): JSX.Element => {
     try {
       const response = await cancelOrder(cancelOrderId);
 
-      if (response.status !== 200) throw new Error('Nepavyko atšaukti vaisto');
+      if (response.status !== 200)
+        throw new Error('Nepavyko atšaukti užsakymo');
 
       handleCloseModal();
       await fetchOrders();
