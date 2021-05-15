@@ -9,7 +9,7 @@ import { Modal } from 'components/Modal';
 import { Pagination } from 'components/Pagination';
 
 import { OrderList } from './components/OrderList';
-import { getOrders } from './services/OrderService';
+import { cancelOrder, getOrders } from './services/OrderService';
 
 export const Orders = (): JSX.Element => {
   const navigate = useNavigate();
@@ -61,9 +61,10 @@ export const Orders = (): JSX.Element => {
     if (cancelOrderId === undefined) return;
 
     try {
-      // const response = await removeMedicament(cancelOrderId);
+      const response = await cancelOrder(cancelOrderId);
 
-      // if (response.status !== 200) throw new Error('Nepavyko ištrinti vaisto');
+      if (response.status !== 200)
+        throw new Error('Nepavyko atšaukti užsakymo');
 
       handleCloseModal();
       await fetchOrders();

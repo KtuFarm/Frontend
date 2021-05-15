@@ -823,6 +823,7 @@ export interface components {
       addressFrom?: string | null;
       addressTo?: string | null;
       expectedDelivery?: string | null;
+      orderState?: string | null;
     };
     OrderDTOGetListDTO: {
       meta?: components['schemas']['Meta'];
@@ -837,6 +838,7 @@ export interface components {
       addressFrom?: string | null;
       addressTo?: string | null;
       expectedDelivery?: string | null;
+      orderState?: string | null;
     };
     OrderFullDTOGetObjectDTO: {
       meta?: components['schemas']['Meta'];
