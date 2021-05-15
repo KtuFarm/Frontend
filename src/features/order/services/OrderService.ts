@@ -39,3 +39,10 @@ export const cancelOrder = async (id: number | string): Promise<Response> => {
     headers: DEFAULT_HEADERS,
   });
 };
+
+export const approveOrder = async (id: number | string): Promise<Response> => {
+  return fetch(`${API_HOST}/api/v1/Orders/${id}/approve`, {
+    method: 'POST',
+    headers: DEFAULT_HEADERS,
+  });
+};

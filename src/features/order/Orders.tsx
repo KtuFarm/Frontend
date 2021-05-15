@@ -9,15 +9,18 @@ import { Modal } from 'components/Modal';
 import { Pagination } from 'components/Pagination';
 
 import { OrderList } from './components/OrderList';
-import { cancelOrder, getOrders } from './services/OrderService';
+import { approveOrder, cancelOrder, getOrders } from './services/OrderService';
 
 export const Orders = (): JSX.Element => {
   const navigate = useNavigate();
   const [error, setError] = useState('');
-  const [cancelError, setCancelError] = useState('');
+  const [modalError, setModalError] = useState('');
   const [loading, setLoading] = useState(false);
   const [orders, setOrders] = useState<OrderDTO[]>([]);
   const [cancelOrderId, setCancelOrderId] = useState<number | undefined>(
+    undefined
+  );
+  const [approveOrderId, setApproveOrderId] = useState<number | undefined>(
     undefined
   );
 
@@ -49,12 +52,17 @@ export const Orders = (): JSX.Element => {
   };
 
   const handleCloseModal = (): void => {
-    setCancelError('');
+    setModalError('');
     setCancelOrderId(undefined);
+    setApproveOrderId(undefined);
   };
 
-  const handleCancel = (pharmacyId: number): void => {
-    setCancelOrderId(pharmacyId);
+  const handleCancel = (orderId: number): void => {
+    setCancelOrderId(orderId);
+  };
+
+  const handleApprove = (orderId: number): void => {
+    setApproveOrderId(orderId);
   };
 
   const handleCancelConfirm = async (): Promise<void> => {
@@ -69,11 +77,28 @@ export const Orders = (): JSX.Element => {
       handleCloseModal();
       await fetchOrders();
     } catch (error) {
-      setCancelError(error?.message ?? '');
+      setModalError(error?.message ?? '');
+    }
+  };
+
+  const handleApproveConfirm = async (): Promise<void> => {
+    if (approveOrderId === undefined) return;
+
+    try {
+      const response = await approveOrder(approveOrderId);
+
+      if (response.status !== 200)
+        throw new Error('Nepavyko patvirtinti užsakymo');
+
+      handleCloseModal();
+      await fetchOrders();
+    } catch (error) {
+      setModalError(error?.message ?? '');
     }
   };
 
   const isCancelModalOpen = cancelOrderId !== undefined;
+  const isApproveModalOpen = approveOrderId !== undefined;
 
   return (
     <Container>
@@ -92,6 +117,7 @@ export const Orders = (): JSX.Element => {
           error={error}
           loading={loading}
           onCancel={handleCancel}
+          onApprove={handleApprove}
         />
       </Content>
       <Pagination />
@@ -99,12 +125,28 @@ export const Orders = (): JSX.Element => {
         isOpen={isCancelModalOpen}
         title="Atšaukti užsakymą"
         content="Ar tikrai norite atšaukti užsakymą?"
-        error={cancelError}
+        error={modalError}
         buttons={
           <>
             <Button.Danger className="sm:ml-2" onClick={handleCancelConfirm}>
               Patvirtinti atšaukimą
             </Button.Danger>
+            <Button.Secondary onClick={handleCloseModal}>
+              Atšaukti
+            </Button.Secondary>
+          </>
+        }
+      />
+      <Modal
+        isOpen={isApproveModalOpen}
+        title="Patvirtinti užsakymą"
+        content="Ar tikrai norite patvirtinti užsakymą?"
+        error={modalError}
+        buttons={
+          <>
+            <Button.Primary className="sm:ml-2" onClick={handleApproveConfirm}>
+              Patvirtinti užsakymą
+            </Button.Primary>
             <Button.Secondary onClick={handleCloseModal}>
               Atšaukti
             </Button.Secondary>
