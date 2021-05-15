@@ -3,13 +3,19 @@ import { useAuth } from 'hooks/useAuth';
 import { OrderDTO } from 'swagger/models';
 
 import { formatDate } from 'utils/date';
-import { canCancel, OrderState, stateTranslations } from 'utils/orderStates';
+import {
+  canApprove,
+  canCancel,
+  OrderState,
+  stateTranslations,
+} from 'utils/orderStates';
 
 interface OrderListProps {
   orders: OrderDTO[];
   error: string;
   loading: boolean;
   onCancel: (orderId: number) => void;
+  onApprove: (orderId: number) => void;
 }
 
 export const OrderList = ({
@@ -17,12 +23,17 @@ export const OrderList = ({
   error,
   loading,
   onCancel,
+  onApprove,
 }: OrderListProps): JSX.Element => {
   const { department } = useAuth();
   const navigate = useNavigate();
 
   const handleCancel = (orderId: number | undefined): void => {
     if (orderId) onCancel(orderId);
+  };
+
+  const handleApprove = (orderId: number | undefined): void => {
+    if (orderId) onApprove(orderId);
   };
 
   const handleEditOrder = (orderId: number | undefined): void => {
@@ -79,21 +90,32 @@ export const OrderList = ({
               <td className="px-4 py-3">{deliveryDate}</td>
               <td className="px-4 py-3">{stateTranslations[state]}</td>
               <td className="px-4 py-3 text-right">
-                <button
-                  className="mr-4 text-indigo-500 outline-none appearance-none hover:underline hover:text-indigo-600 focus:outline-none"
-                  onClick={() => handleEditOrder(orderId)}
-                >
-                  Redaguoti
-                </button>
-                {canCancel(state, department) ? (
+                <div className="flex gap-2 justify-end">
                   <button
-                    className="text-red-500 outline-none appearance-none hover:underline hover:text-red-600 focus:outline-none"
-                    type="button"
-                    onClick={() => handleCancel(orderId)}
+                    className="text-indigo-500 outline-none appearance-none hover:underline hover:text-indigo-600 focus:outline-none"
+                    onClick={() => handleEditOrder(orderId)}
                   >
-                    Atšaukti
+                    Redaguoti
                   </button>
-                ) : null}
+                  {canApprove(state, department) ? (
+                    <button
+                      className="text-green-500 outline-none appearance-none hover:underline hover:text-green-600 focus:outline-none"
+                      type="button"
+                      onClick={() => handleApprove(orderId)}
+                    >
+                      Patvirtinti
+                    </button>
+                  ) : null}
+                  {canCancel(state, department) ? (
+                    <button
+                      className="text-red-500 outline-none appearance-none hover:underline hover:text-red-600 focus:outline-none"
+                      type="button"
+                      onClick={() => handleCancel(orderId)}
+                    >
+                      Atšaukti
+                    </button>
+                  ) : null}
+                </div>
               </td>
             </tr>
           );
