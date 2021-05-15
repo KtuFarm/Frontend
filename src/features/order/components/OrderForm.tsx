@@ -13,9 +13,7 @@ import {
 import { Button } from 'components/Button';
 import { Label } from 'components/Label';
 import { Select } from 'components/Select';
-
-const formatMoney = (amount: number): string =>
-  amount.toLocaleString('lt-LT', { style: 'currency', currency: 'EUR' });
+import { formatMoney } from 'utils/money';
 
 interface OrderFormProps {
   loading?: boolean;
@@ -47,7 +45,7 @@ export const OrderForm = ({
 
   useEffect(() => {
     if (order == null) return;
-
+    setWarehouseId(order.warehouseId ?? -1);
     setOrderItems(order.products ?? []);
   }, [order]);
 
@@ -70,6 +68,7 @@ export const OrderForm = ({
     event: React.ChangeEvent<HTMLSelectElement>
   ): void => {
     setWarehouseId(event.target.value ? Number(event.target.value) : -1);
+    setOrderItems([]);
   };
 
   const handleChangeAmount = (
@@ -122,11 +121,7 @@ export const OrderForm = ({
               onChange={handleChangeWarehouse}
               disabled={order != null}
             >
-              {order != null ? (
-                <option value="-1">{order.addressTo}</option>
-              ) : (
-                <option value="-1">Pasirinkite sandėlį</option>
-              )}
+              <option value="-1">Pasirinkite sandėlį</option>
               {warehouses.map((warehouse) => {
                 return (
                   <option key={warehouse.id} value={warehouse.id}>
@@ -140,7 +135,6 @@ export const OrderForm = ({
 
         <div className="w-full p-2">
           <ProductSelect
-            clearOnSelect={false}
             onSelect={handleAdd}
             disabled={warehouseId === -1 && order == null}
             getProducts={getProducts}
@@ -185,9 +179,8 @@ export const OrderForm = ({
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
                     {orderItems.map((orderItem) => {
-                      console.log(orderItem);
                       const price = orderItem.price ?? 0;
-                      const amount = orderItem.price ?? 0;
+                      const amount = orderItem.amount ?? 0;
                       const totalPrice = price * amount;
                       return (
                         <tr key={orderItem.id}>
@@ -249,7 +242,7 @@ export const OrderForm = ({
 
         <div className="w-full p-2">
           <Button.Primary type="submit" disabled={submitting}>
-            Užbaigti užsakymą
+            {order == null ? 'Sukurti užsakymą' : 'Atnaujinti užsakymą'}
           </Button.Primary>
         </div>
       </div>
