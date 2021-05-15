@@ -9,7 +9,12 @@ import { Modal } from 'components/Modal';
 import { Pagination } from 'components/Pagination';
 
 import { OrderList } from './components/OrderList';
-import { approveOrder, cancelOrder, getOrders } from './services/OrderService';
+import {
+  approveOrder,
+  cancelOrder,
+  getOrders,
+  prepareOrder,
+} from './services/OrderService';
 
 export const Orders = (): JSX.Element => {
   const navigate = useNavigate();
@@ -65,6 +70,19 @@ export const Orders = (): JSX.Element => {
     setApproveOrderId(orderId);
   };
 
+  const handlePrepare = async (orderId: number): Promise<void> => {
+    try {
+      const response = await prepareOrder(orderId);
+
+      if (response.status !== 200)
+        throw new Error('Nepavyko paruošti užsakymo');
+
+      await fetchOrders();
+    } catch (error) {
+      setError(error?.message ?? '');
+    }
+  };
+
   const handleCancelConfirm = async (): Promise<void> => {
     if (cancelOrderId === undefined) return;
 
@@ -118,6 +136,7 @@ export const Orders = (): JSX.Element => {
           loading={loading}
           onCancel={handleCancel}
           onApprove={handleApprove}
+          onPrepare={handlePrepare}
         />
       </Content>
       <Pagination />

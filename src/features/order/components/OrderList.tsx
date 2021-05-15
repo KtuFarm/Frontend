@@ -6,6 +6,7 @@ import { formatDate } from 'utils/date';
 import {
   canApprove,
   canCancel,
+  canPrepare,
   OrderState,
   stateTranslations,
 } from 'utils/orderStates';
@@ -16,6 +17,7 @@ interface OrderListProps {
   loading: boolean;
   onCancel: (orderId: number) => void;
   onApprove: (orderId: number) => void;
+  onPrepare: (orderId: number) => void | Promise<void>;
 }
 
 export const OrderList = ({
@@ -24,6 +26,7 @@ export const OrderList = ({
   loading,
   onCancel,
   onApprove,
+  onPrepare,
 }: OrderListProps): JSX.Element => {
   const { department } = useAuth();
   const navigate = useNavigate();
@@ -34,6 +37,10 @@ export const OrderList = ({
 
   const handleApprove = (orderId: number | undefined): void => {
     if (orderId) onApprove(orderId);
+  };
+
+  const handlePrepare = (orderId: number | undefined): void => {
+    if (orderId) onPrepare(orderId);
   };
 
   const handleEditOrder = (orderId: number | undefined): void => {
@@ -97,6 +104,15 @@ export const OrderList = ({
                   >
                     Redaguoti
                   </button>
+                  {canPrepare(state, department) ? (
+                    <button
+                      className="text-green-500 outline-none appearance-none hover:underline hover:text-green-600 focus:outline-none"
+                      type="button"
+                      onClick={() => handlePrepare(orderId)}
+                    >
+                      Paruošti
+                    </button>
+                  ) : null}
                   {canApprove(state, department) ? (
                     <button
                       className="text-green-500 outline-none appearance-none hover:underline hover:text-green-600 focus:outline-none"
