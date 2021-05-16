@@ -9,6 +9,7 @@ import {
 import { CreateOrder, EditOrder, Orders } from 'features/order';
 import { CreatePharmacy, EditPharmacy, Pharmacies } from 'features/pharmacy';
 import { Products } from 'features/product';
+import { CreateReport, Reports, ViewReport } from 'features/reports';
 import { CreateSale, Sales } from 'features/sale';
 import { useAuth } from 'hooks/useAuth';
 
@@ -19,7 +20,7 @@ export const App = (): JSX.Element => {
 
   if (loading) {
     return (
-      <div className="text-indigo-600 flex justify-center items-center w-screen h-screen">
+      <div className="flex items-center justify-center w-screen h-screen text-indigo-600">
         <Loader />
       </div>
     );
@@ -49,6 +50,9 @@ export const App = (): JSX.Element => {
       <Route path="/order/new" element={<CreateOrder />} />
       <Route path="/order/:id" element={<EditOrder />} />
       <Route path="/product" element={<Products />} />
+      <Route path="/report" element={<Reports />} />
+      <Route path="/report/new" element={<CreateReport />} />
+      <Route path="/report/:id" element={<ViewReport />} />
       <Route path="*" element={<Navigate to="/" />} />
     </Routes>
   );

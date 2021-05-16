@@ -469,6 +469,69 @@ export interface paths {
       };
     };
   };
+  '/api/v1/Reports': {
+    get: {
+      parameters: {
+        header: {
+          /** Api Request header */
+          'X-Api-Request': string;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            'text/plain': components['schemas']['ReportDTOGetListDTO'];
+            'application/json': components['schemas']['ReportDTOGetListDTO'];
+            'text/json': components['schemas']['ReportDTOGetListDTO'];
+          };
+        };
+      };
+    };
+    post: {
+      parameters: {
+        header: {
+          /** Api Request header */
+          'X-Api-Request': string;
+        };
+      };
+      responses: {
+        /** Success */
+        200: unknown;
+      };
+      requestBody: {
+        content: {
+          'application/json-patch+json': components['schemas']['CreateReportDTO'];
+          'application/json': components['schemas']['CreateReportDTO'];
+          'text/json': components['schemas']['CreateReportDTO'];
+          'application/*+json': components['schemas']['CreateReportDTO'];
+        };
+      };
+    };
+  };
+  '/api/v1/Reports/{id}': {
+    get: {
+      parameters: {
+        path: {
+          id: number;
+        };
+        header: {
+          /** Api Request header */
+          'X-Api-Request': string;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            'text/plain': components['schemas']['ReportFullDTOGetObjectDTO'];
+            'application/json': components['schemas']['ReportFullDTOGetObjectDTO'];
+            'text/json': components['schemas']['ReportFullDTOGetObjectDTO'];
+          };
+        };
+      };
+    };
+  };
   '/api/v1/Transactions': {
     post: {
       parameters: {
@@ -731,9 +794,13 @@ export interface components {
       registersCount?: number;
       workingHours?: components['schemas']['WorkingHoursDTO'][] | null;
     };
+    CreateReportDTO: {
+      dateFrom?: string;
+      dateTo?: string;
+      reportTypeId?: number;
+    };
     CreateTransactionDTO: {
       products?: components['schemas']['TransactionProductDTO'][] | null;
-      pharmacyId?: number;
       registerId?: number;
       paymentTypeId?: number;
     };
@@ -878,6 +945,36 @@ export interface components {
     RegisterDTO: {
       id?: number;
       cash?: number;
+    };
+    ReportDTO: {
+      id?: number;
+      code?: string | null;
+      dateFrom?: string | null;
+      dateTo?: string | null;
+    };
+    ReportDTOGetListDTO: {
+      meta?: components['schemas']['Meta'];
+      data?: components['schemas']['ReportDTO'][] | null;
+    };
+    ReportFullDTO: {
+      orderCount?: number;
+      transactionCount?: number;
+      totalRevenue?: number;
+      revenueInCash?: number;
+      generationDate?: string;
+      totalOrderAmount?: number;
+      profit?: number;
+      reportType?: string | null;
+      user?: string | null;
+      pharmacy?: string | null;
+      id?: number;
+      code?: string | null;
+      dateFrom?: string | null;
+      dateTo?: string | null;
+    };
+    ReportFullDTOGetObjectDTO: {
+      meta?: components['schemas']['Meta'];
+      data?: components['schemas']['ReportFullDTO'];
     };
     TransactionDTO: {
       createdAt?: string | null;
