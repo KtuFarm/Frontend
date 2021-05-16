@@ -29,6 +29,10 @@ export const Header = (): JSX.Element => {
     navigate('/product');
   };
 
+  const handleOpenReports = (): void => {
+    navigate('/report');
+  };
+
   return (
     <header className="text-gray-600 bg-white shadow body-font">
       <div className="container flex flex-col flex-wrap items-center p-5 mx-auto md:flex-row">
@@ -74,6 +78,12 @@ export const Header = (): JSX.Element => {
             className="mr-5 hover:text-gray-900"
           >
             Likučiai
+          </button>
+          <button
+            onClick={handleOpenReports}
+            className="mr-5 hover:text-gray-900"
+          >
+            Ataskaitos
           </button>
         </nav>
         <button

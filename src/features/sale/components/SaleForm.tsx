@@ -90,7 +90,6 @@ export const SaleForm = ({
 
     const transaction: CreateTransactionDTO = {
       products,
-      pharmacyId: 1,
       registerId: 130,
       paymentTypeId,
     };
