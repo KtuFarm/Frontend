@@ -6,6 +6,7 @@ import { formatDate } from 'utils/date';
 import {
   canApprove,
   canCancel,
+  canEdit,
   canPrepare,
   OrderState,
   stateTranslations,
@@ -97,13 +98,15 @@ export const OrderList = ({
               <td className="px-4 py-3">{deliveryDate}</td>
               <td className="px-4 py-3">{stateTranslations[state]}</td>
               <td className="px-4 py-3 text-right">
-                <div className="flex gap-2 justify-end">
-                  <button
-                    className="text-indigo-500 outline-none appearance-none hover:underline hover:text-indigo-600 focus:outline-none"
-                    onClick={() => handleEditOrder(orderId)}
-                  >
-                    Redaguoti
-                  </button>
+                <div className="flex justify-end gap-2">
+                  {canEdit(state, department) ? (
+                    <button
+                      className="text-indigo-500 outline-none appearance-none hover:underline hover:text-indigo-600 focus:outline-none"
+                      onClick={() => handleEditOrder(orderId)}
+                    >
+                      Redaguoti
+                    </button>
+                  ) : null}
                   {canPrepare(state, department) ? (
                     <button
                       className="text-green-500 outline-none appearance-none hover:underline hover:text-green-600 focus:outline-none"
