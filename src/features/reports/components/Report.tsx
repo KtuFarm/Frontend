@@ -3,11 +3,7 @@ import { ReportFullDTO } from 'swagger/models';
 import { formatDate } from 'utils/date';
 import { formatMoney } from 'utils/money';
 
-import {
-  ReportType,
-  reportTypeToId,
-  reportTypeTranslations,
-} from '../models/reportTypes';
+import { reportTypeToId, reportTypeTranslations } from '../models/reportTypes';
 
 interface ReportProps {
   report: ReportFullDTO | null;

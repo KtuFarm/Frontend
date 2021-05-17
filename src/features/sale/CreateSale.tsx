@@ -1,9 +1,13 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
+import { getPharmacy } from 'features/pharmacy/services/PharmacyService';
+import { useAuth } from 'hooks/useAuth';
 import {
   CreateTransactionDTO,
   EnumDTO,
   GetEnumerableDTO,
+  PharmacyFullDTO,
+  RegisterDTO,
 } from 'swagger/models';
 
 import { Layout } from 'components/Layout';
@@ -14,10 +18,12 @@ import { createTransaction } from './services/TransactionService';
 
 export const CreateSale = (): JSX.Element => {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [paymentTypes, setPaymentTypes] = useState<EnumDTO[]>([]);
+  const [registers, setRegisters] = useState<RegisterDTO[]>([]);
 
   const fetchPaymentTypes = async (): Promise<void> => {
     setLoading(true);
@@ -35,6 +41,28 @@ export const CreateSale = (): JSX.Element => {
   useEffect(() => {
     fetchPaymentTypes();
   }, []);
+
+  const pharmacyId = user?.pharmacyId;
+
+  useEffect(() => {
+    const fetchRegisters = async (): Promise<void> => {
+      if (!pharmacyId) return;
+
+      setLoading(true);
+      try {
+        const response = await getPharmacy(pharmacyId);
+        const data = await response.json();
+        const pharmacy = data.data as PharmacyFullDTO;
+        setRegisters(pharmacy.registers ?? []);
+      } catch (error) {
+        setError(error?.message ?? '');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchRegisters();
+  }, [pharmacyId]);
 
   const handleSubmit = async (
     transaction: CreateTransactionDTO
@@ -61,6 +89,7 @@ export const CreateSale = (): JSX.Element => {
   return (
     <Layout title="Naujas pardavimas">
       <SaleForm
+        registers={registers}
         paymentTypes={paymentTypes}
         loading={loading}
         error={error}
