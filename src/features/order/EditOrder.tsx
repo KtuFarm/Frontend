@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import { getWarehouses } from 'features/warehouse/service/WarehouseService';
+import { useAuth } from 'hooks/useAuth';
 import {
   CreateOrderDTO,
   GetWarehousesDTO,
@@ -9,6 +10,7 @@ import {
 } from 'swagger/models';
 
 import { Layout } from 'components/Layout';
+import { Department } from 'utils/departments';
 
 import { OrderForm } from './components/OrderForm';
 import { getOrder, updateOrder } from './services/OrderService';
@@ -16,6 +18,7 @@ import { getOrder, updateOrder } from './services/OrderService';
 export const EditOrder = (): JSX.Element => {
   const navigate = useNavigate();
   const params = useParams();
+  const { department } = useAuth();
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -77,8 +80,16 @@ export const EditOrder = (): JSX.Element => {
     setError('');
   }, []);
 
+  const isWarehouse = department === Department.Warehouse;
+
   return (
-    <Layout title={`Redaguoti užsakymą #${orderId}`}>
+    <Layout
+      title={
+        !isWarehouse
+          ? `Redaguoti užsakymą #${orderId}`
+          : `Užsakymas #${orderId}`
+      }
+    >
       <OrderForm
         loading={loading}
         warehouses={warehouses}
@@ -87,6 +98,7 @@ export const EditOrder = (): JSX.Element => {
         order={order}
         onSubmit={handleSubmit}
         onClearError={handleClearError}
+        disabled={isWarehouse}
       />
     </Layout>
   );

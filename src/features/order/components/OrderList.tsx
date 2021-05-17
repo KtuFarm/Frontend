@@ -3,6 +3,7 @@ import { useAuth } from 'hooks/useAuth';
 import { OrderDTO } from 'swagger/models';
 
 import { formatDate } from 'utils/date';
+import { Department } from 'utils/departments';
 import {
   canApprove,
   canCancel,
@@ -72,6 +73,8 @@ export const OrderList = ({
     );
   }
 
+  const isWarehouse = department === Department.Warehouse;
+
   return (
     <table className="w-full text-left whitespace-no-wrap table-auto table-stripped">
       <thead>
@@ -104,7 +107,7 @@ export const OrderList = ({
                       className="text-indigo-500 outline-none appearance-none hover:underline hover:text-indigo-600 focus:outline-none"
                       onClick={() => handleEditOrder(orderId)}
                     >
-                      Redaguoti
+                      {isWarehouse ? 'Peržiūrėti' : 'Redaguoti'}
                     </button>
                   ) : null}
                   {canPrepare(state, department) ? (
