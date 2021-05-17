@@ -40,3 +40,5 @@ export type ReportDTO = schemas['ReportDTO'];
 export type ReportFullDTO = schemas['ReportFullDTO'];
 export type GetReportDTO = schemas['ReportFullDTOGetObjectDTO'];
 export type CreateReportDTO = schemas['CreateReportDTO'];
+
+export type RegisterDTO = schemas['RegisterDTO'];

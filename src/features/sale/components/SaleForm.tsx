@@ -4,11 +4,13 @@ import {
   EnumDTO,
   MedicamentDTO,
   ProductBalanceDTO,
+  RegisterDTO,
 } from 'swagger/models';
 
 import { Button } from 'components/Button';
 import { Label } from 'components/Label';
 import { Select } from 'components/Select';
+import { formatMoney } from 'utils/money';
 
 import { paymentTypeTranslation } from '../models/PaymentTypes';
 
@@ -19,11 +21,9 @@ interface SaleItem {
   amount: number;
 }
 
-const formatMoney = (amount: number): string =>
-  amount.toLocaleString('lt-LT', { style: 'currency', currency: 'EUR' });
-
 interface SaleFormProps {
   paymentTypes: EnumDTO[];
+  registers: RegisterDTO[];
   loading: boolean;
   error: string;
   submitting: boolean;
@@ -33,6 +33,7 @@ interface SaleFormProps {
 
 export const SaleForm = ({
   paymentTypes,
+  registers,
   submitting,
   error,
   loading,
@@ -41,6 +42,7 @@ export const SaleForm = ({
 }: SaleFormProps): JSX.Element => {
   const [saleItems, setSaleItems] = useState<SaleItem[]>([]);
   const [paymentTypeId, setPaymentTypeId] = useState(1);
+  const [registerId, setRegisterId] = useState(-1);
 
   useEffect(() => {
     onClearError();
@@ -51,6 +53,12 @@ export const SaleForm = ({
     event: React.ChangeEvent<HTMLSelectElement>
   ): void => {
     setPaymentTypeId(Number(event.target.value));
+  };
+
+  const handleChangeRegister = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ): void => {
+    setRegisterId(Number(event.target.value));
   };
 
   const handleAdd = (medicament: MedicamentDTO): void => {
@@ -90,7 +98,7 @@ export const SaleForm = ({
 
     const transaction: CreateTransactionDTO = {
       products,
-      registerId: 130,
+      registerId,
       paymentTypeId,
     };
 
@@ -118,6 +126,27 @@ export const SaleForm = ({
                 return (
                   <option key={type.id} value={type.id}>
                     {typeName}
+                  </option>
+                );
+              })}
+            </Select>
+          </div>
+        </div>
+
+        <div className="w-full p-2">
+          <div className="relative">
+            <Label htmlFor="paymentType">Kasa</Label>
+            <Select
+              id="registerId"
+              name="registerId"
+              value={registerId}
+              onChange={handleChangeRegister}
+            >
+              <option value="-1">Pasirinkite kasą</option>
+              {registers.map((register) => {
+                return (
+                  <option key={register.id} value={register.id}>
+                    Kasa #{register.id} - {formatMoney(register.cash)}
                   </option>
                 );
               })}
