@@ -28,7 +28,10 @@ export const canCancel = (state: OrderState, department: Department): boolean =>
   [OrderState.Created, OrderState.Approved].includes(state) &&
   department === Department.Pharmacy;
 
-export const canEdit = canCancel;
+export const canEdit = (state: OrderState, department: Department): boolean =>
+  ([OrderState.Created, OrderState.Approved].includes(state) &&
+    department === Department.Pharmacy) ||
+  department === Department.Warehouse;
 
 export const canApprove = (
   state: OrderState,

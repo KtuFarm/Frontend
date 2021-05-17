@@ -21,6 +21,7 @@ interface OrderFormProps {
   error: string;
   submitting: boolean;
   order?: OrderFullDTO | null;
+  disabled?: boolean;
   onSubmit: (order: CreateOrderDTO) => unknown;
   onClearError: () => unknown;
 }
@@ -33,6 +34,7 @@ export const OrderForm = ({
   onSubmit,
   warehouses,
   order = null,
+  disabled = false,
 }: OrderFormProps): JSX.Element => {
   const [orderItems, setOrderItems] = useState<ProductBalanceDTO[]>([]);
   const [warehouseId, setWarehouseId] = useState(-1);
@@ -113,13 +115,13 @@ export const OrderForm = ({
       <div className="flex flex-wrap -m-2">
         <div className="w-full p-2">
           <div className="relative">
-            <Label htmlFor="registerCount">Sandėlys</Label>
+            <Label htmlFor="warehouseId">Sandėlys</Label>
             <Select
               id="warehouseId"
               name="warehouseId"
               value={warehouseId}
               onChange={handleChangeWarehouse}
-              disabled={order != null}
+              disabled={order != null || disabled}
             >
               <option value="-1">Pasirinkite sandėlį</option>
               {warehouses.map((warehouse) => {
@@ -136,7 +138,7 @@ export const OrderForm = ({
         <div className="w-full p-2">
           <ProductSelect
             onSelect={handleAdd}
-            disabled={warehouseId === -1 && order == null}
+            disabled={(warehouseId === -1 && order == null) || disabled}
             getProducts={getProducts}
           />
         </div>
@@ -206,6 +208,7 @@ export const OrderForm = ({
                                 type="text"
                                 className="flex-1 block w-0 border-gray-300 rounded-md disabled:cursor-not-allowed disabled:bg-gray-100 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                                 value={orderItem.amount}
+                                disabled={disabled}
                                 onChange={(event) =>
                                   handleChangeAmount(event, orderItem.id)
                                 }
@@ -219,12 +222,14 @@ export const OrderForm = ({
                             {formatMoney(totalPrice)}
                           </td>
                           <td className="px-6 py-4 text-sm font-medium text-right whitespace-nowrap">
-                            <button
-                              className="text-red-600 outline-none hover:text-red-900 focus:outline-none"
-                              onClick={() => handleRemove(orderItem.id)}
-                            >
-                              Pašalinti
-                            </button>
+                            {!disabled ? (
+                              <button
+                                className="text-red-600 outline-none hover:text-red-900 focus:outline-none"
+                                onClick={() => handleRemove(orderItem.id)}
+                              >
+                                Pašalinti
+                              </button>
+                            ) : null}
                           </td>
                         </tr>
                       );
@@ -241,9 +246,11 @@ export const OrderForm = ({
         ) : null}
 
         <div className="w-full p-2">
-          <Button.Primary type="submit" disabled={submitting}>
-            {order == null ? 'Sukurti užsakymą' : 'Atnaujinti užsakymą'}
-          </Button.Primary>
+          {!disabled ? (
+            <Button.Primary type="submit" disabled={submitting}>
+              {order == null ? 'Sukurti užsakymą' : 'Atnaujinti užsakymą'}
+            </Button.Primary>
+          ) : null}
         </div>
       </div>
     </form>
